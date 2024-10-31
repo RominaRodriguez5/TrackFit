@@ -3,13 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package mosqueira.trackfit;
-
 /**
  *
  * @author Lulas
  */
 public class Main extends javax.swing.JFrame {
-
     /**
      * Creates new form Main
      */
@@ -26,21 +24,64 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jColorChooser1 = new javax.swing.JColorChooser();
+        jColorChooser2 = new javax.swing.JColorChooser();
+        jColorChooser3 = new javax.swing.JColorChooser();
+        jlogo = new javax.swing.JLabel();
+        JsitioWeb = new javax.swing.JLabel();
+        IraDialogo = new javax.swing.JButton();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 928, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 783, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(153, 153, 255));
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        setForeground(java.awt.Color.darkGray);
+        setPreferredSize(new java.awt.Dimension(437, 395));
+        setResizable(false);
+        getContentPane().setLayout(null);
+
+        jlogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logo.png"))); // NOI18N
+        getContentPane().add(jlogo);
+        jlogo.setBounds(110, 40, 180, 190);
+
+        JsitioWeb.setText("<html><u>Visita nuestro sitio web</u></html>");
+        JsitioWeb.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                JsitioWebMouseClicked(evt);
+            }
+        });
+        getContentPane().add(JsitioWeb);
+        JsitioWeb.setBounds(140, 230, 130, 40);
+
+        IraDialogo.setForeground(new java.awt.Color(0, 0, 0));
+        IraDialogo.setText("Login");
+        IraDialogo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                IraDialogoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(IraDialogo);
+        IraDialogo.setBounds(160, 320, 72, 23);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+   
+    private void JsitioWebMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JsitioWebMouseClicked
+        // TODO add your handling code here:
+       try {
+        // Abre la URL en el navegador
+            String url = "http://www.ejemplo.com/"; // Reemplaza con la URL de tu aplicación
+            java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
+        } catch (Exception e) {
+            e.printStackTrace();
+        } 
+    }//GEN-LAST:event_JsitioWebMouseClicked
+
+    private void IraDialogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IraDialogoActionPerformed
+        // TODO add your handling code here:
+        NewJDialog iraDialogo = new NewJDialog(this, true); // Crea el diálogo de login
+        iraDialogo.setVisible(true);
+    }//GEN-LAST:event_IraDialogoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +119,11 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton IraDialogo;
+    private javax.swing.JLabel JsitioWeb;
+    private javax.swing.JColorChooser jColorChooser1;
+    private javax.swing.JColorChooser jColorChooser2;
+    private javax.swing.JColorChooser jColorChooser3;
+    private javax.swing.JLabel jlogo;
     // End of variables declaration//GEN-END:variables
 }
