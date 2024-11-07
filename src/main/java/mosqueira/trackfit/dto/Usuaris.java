@@ -5,8 +5,27 @@ package mosqueira.trackfit.dto;
  *
  * @author Lulas
  */
-public class Usuari {
+public class Usuaris {
 
+    /**
+     * @return the AssignedInstructor
+     */
+    public int getAssignedInstructor() {
+        return AssignedInstructor;
+    }
+
+    /**
+     * @param AssignedInstructor the AssignedInstructor to set
+     */
+    public void setAssignedInstructor(int AssignedInstructor) {
+        this.AssignedInstructor = AssignedInstructor;
+    }
+     
+    @Override
+    public String toString(){
+        return  this.getNom();
+    }
+    
     public int getId() {
         return Id;
     }
@@ -47,7 +66,7 @@ public class Usuari {
         this.Foto = Foto;
     }
 
-    public boolean Instructor() {
+    public boolean isInstructor() {
         return Instructor;
     }
 
@@ -60,5 +79,5 @@ public class Usuari {
     private String PasswordHash;
     private byte[] Foto;
     private boolean Instructor;
-
+    private int AssignedInstructor;
 }
