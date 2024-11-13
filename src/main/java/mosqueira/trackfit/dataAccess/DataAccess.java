@@ -1,12 +1,10 @@
 package mosqueira.trackfit.dataAccess;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -15,6 +13,7 @@ import java.util.logging.Logger;
 import mosqueira.trackfit.dto.Exercicis;
 import mosqueira.trackfit.dto.Usuaris;
 import mosqueira.trackfit.dto.Workouts;
+import mosqueira.trackfit.dto.ExercicisWorKouts;
 
 /**
  *
@@ -38,7 +37,7 @@ public class DataAccess {
         return connection;
     }
 
-    public ArrayList<Usuaris> getUsuarios() {
+    public ArrayList<Usuaris> getAllUsers() {
         ArrayList<Usuaris> usuarios = new ArrayList<>();
         String sql = "SELECT Nom FROM Usuaris";
         Connection connection = getConnection();
@@ -63,7 +62,7 @@ public class DataAccess {
         return usuarios;
     }
 
-    public static Usuaris getUsuario(String email) {
+    public static Usuaris getUser(String email) {
         Usuaris user = new Usuaris();
         String sql = "SELECT * FROM Usuaris WHERE Email=?";
         Connection connection = getConnection();
@@ -82,61 +81,65 @@ public class DataAccess {
             selectStatement.close();
             connection.close();
         } catch (SQLException ex) {
-            Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
+             Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
         }
         return user;
     }
 
-    public ArrayList<Usuaris> getInstrutor() {
-        ArrayList<Usuaris> usersInstructor = new ArrayList<>();
-        String sql = "SELECT * FROM Usuaris WHERE AssignedInstructor = ? AND Instructor != 1"; // Utiliza la columna AssignedInstructor
-        Connection connection = getConnection();
+    public ArrayList<Usuaris> getAllUsersInstructor(int instructorId) {
+        ArrayList<Usuaris> usuaris = new ArrayList<>();
+        String sql = "SELECT * FROM Usuaris WHERE Instructor = 0 AND AssignedInstructor = ?";
 
+        Connection connection = getConnection();
         try {
             PreparedStatement selectStatement = connection.prepareStatement(sql);
-            selectStatement.setInt(1, 7); // Establecer el ID del instructor
+            selectStatement.setInt(1, instructorId);  // Filtra por el ID del instructor
             ResultSet resultSet = selectStatement.executeQuery();
 
             while (resultSet.next()) {
                 Usuaris user = new Usuaris();
                 user.setId(resultSet.getInt("Id"));
                 user.setNom(resultSet.getString("Nom"));
-                usersInstructor.add(user);
+                user.setEmail(resultSet.getString("Email"));
+                user.setPasswordHash(resultSet.getString("PasswordHash"));
+                //user.setFoto(resultSet.getBytes("Foto"));
+                user.setInstructor(resultSet.getBoolean("Instructor"));
+                usuaris.add(user);  // Añadir el usuario a la lista
             }
             selectStatement.close();
             connection.close();
         } catch (SQLException ex) {
             Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        return usersInstructor;
+
+        return usuaris;
     }
-    
-    public int registerUser(Usuaris u) {
-        int newUserId = 0;
-        Connection connection = getConnection();
-        String sql = "INSERT INTO Usuaris(NOm,Email,PasswordHash,Instructor)"
-                + "VALUES(?,?,?,?)";
-        try {
-            PreparedStatement insertStatement = connection.prepareStatement(sql);
-            insertStatement.setString(1, u.getNom());
-            insertStatement.setString(2, u.getEmail());
-            insertStatement.setString(3, u.getPasswordHash());
-            insertStatement.setBoolean(4, u.isInstructor());
-            newUserId = insertStatement.executeUpdate();
+  
+    public ArrayList<Workouts> getWorkoutsForUser(int userId) {
+        ArrayList<Workouts> workout = new ArrayList<>();
+        String sql = "SELECT Id, UserId, ForDate, Comments FROM Workouts WHERE UserId = ?";
 
-            insertStatement.close();
-            connection.close();
-
+        try (
+                Connection connection = getConnection(); PreparedStatement selectStatement = connection.prepareStatement(sql)) {
+            selectStatement.setInt(1, userId);
+            ResultSet resultSet = selectStatement.executeQuery();
+            while (resultSet.next()) {
+                Workouts workouts = new Workouts();
+                workouts.setUserId(resultSet.getInt("UserId"));
+                workouts.setId(resultSet.getInt("Id"));
+                workouts.setForDate(resultSet.getString("ForDate"));
+                workouts.setComments(resultSet.getString("Comments"));
+                workout.add(workouts);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return newUserId;
+        return workout;
     }
     
     public List<Workouts> getWorkoutsList() {
         List<Workouts> workouts = new ArrayList<>();
-        String sql = "SELECT * FROM workouts";  // Ajusta la consulta según tu estructura de base de datos
+        String sql = "SELECT * FROM workouts"; 
         Connection connection = getConnection();
         try {
              PreparedStatement selectStatement = connection.prepareStatement(sql);
@@ -157,7 +160,7 @@ public class DataAccess {
         return workouts;
     }
 
-    public void saveWorkout(Workouts workout) {
+    public void getSaveWorkout(Workouts workout) {
         String sql = "INSERT INTO Workouts (ForDate, UserId, Comments) VALUES (?, ?, ?)";
 
         try (Connection connection = getConnection(); PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -182,29 +185,50 @@ public class DataAccess {
             Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    public ArrayList<Workouts> getWorkoutsUser(int userId) {
-        ArrayList<Workouts> workout = new ArrayList<>();
-        String sql = "SELECT Id, UserId, ForDate, Comments FROM Workouts WHERE UserId = ?";
-
-        try (
-                Connection connection = getConnection(); PreparedStatement selectStatement = connection.prepareStatement(sql)) {
-            selectStatement.setInt(1, userId);
+    
+    public ArrayList<Exercicis> getInfoExercise() {
+        ArrayList<Exercicis> infoExercicis = new ArrayList<>();
+        String sql = "SELECT * FROM Exercicis";
+        Connection connection = getConnection();
+        try {
+            PreparedStatement selectStatement = connection.prepareStatement(sql);
             ResultSet resultSet = selectStatement.executeQuery();
+
             while (resultSet.next()) {
-                Workouts workouts = new Workouts();
-                workouts.setUserId(resultSet.getInt("UserId"));
-                workouts.setId(resultSet.getInt("Id"));
-                workouts.setForDate(resultSet.getString("ForDate"));
-                workouts.setComments(resultSet.getString("Comments"));
-                workout.add(workouts);
+                Exercicis infoExercici = new Exercicis();
+                infoExercici.setNomExercici(resultSet.getString("NomExercici"));
+                infoExercici.setDescripcio(resultSet.getString("Descripcio"));
+                infoExercici.setId(resultSet.getInt("Id"));
+                infoExercicis.add(infoExercici);
             }
+            selectStatement.close();
+            connection.close();
         } catch (SQLException ex) {
             Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return workout;
+        return infoExercicis;
     }
 
+    public void getSaveExercici(Exercicis exercici) {
+        String sql = "INSERT INTO Exercicis (NomExercici, Descripcio) VALUES (?, ?)";
+        Connection connection = getConnection();
+
+        try {
+            PreparedStatement insertStatement = connection.prepareStatement(sql);
+            insertStatement.setString(1, exercici.getNomExercici());
+            insertStatement.setString(2, exercici.getDescripcio());
+
+            int rowsAffected = insertStatement.executeUpdate();
+            if (rowsAffected > 0);
+            
+
+            insertStatement.close();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public ArrayList<Exercicis> getExercicisForWorkout(int workoutId) {
         ArrayList<Exercicis> exercicisList = new ArrayList<>();
         String sql = "SELECT e.Id, e.NomExercici, e.Descripcio "
@@ -233,52 +257,105 @@ public class DataAccess {
 
         return exercicisList;
     }
-
-    public ArrayList<Exercicis> getInfoExercicis() {
-        ArrayList<Exercicis> infoExercicis = new ArrayList<>();
-        String sql = "SELECT * FROM Exercicis";
-        Connection connection = getConnection();
-        try {
-            PreparedStatement selectStatement = connection.prepareStatement(sql);
-            // Establecer el ID del instructor
-            ResultSet resultSet = selectStatement.executeQuery();
-
-            while (resultSet.next()) {
-                Exercicis infoExercici = new Exercicis();
-                infoExercici.setNomExercici(resultSet.getString("NomExercici"));
-                infoExercici.setDescripcio(resultSet.getString("Descripcio"));
-                infoExercici.setId(resultSet.getInt("Id"));
-                infoExercicis.add(infoExercici);
-            }
-            selectStatement.close();
-            connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
+     
+    public void insertarRelaciones(ExercicisWorKouts exercicisWorkout) {
+       //Primero, verificar si los IDs existen en sus respectivas tablas
+        if (!existeId("Exercicis", exercicisWorkout.getIdExercici()) || !existeId("Workouts", exercicisWorkout.getIdWorkouts())) {
+            return;  // No continuar con la inserción
         }
-        System.out.println("Usuarios encontrados: " + infoExercicis.size());
-        return infoExercicis;
-    }
 
-    public void insertarRelaciones(Workouts workout, ArrayList<Exercicis> ejerciciosSeleccionados) {
-        // Asumimos que la relación entre ejercicios y entrenamientos está en la tabla ExercicisWorkouts
+        // Si ambos IDs existen, proceder con la inserción en la tabla ExercicisWorkouts
         String sql = "INSERT INTO ExercicisWorkouts (IdExercici, IdWorkout) VALUES (?, ?)";
 
-        try (Connection connection = getConnection(); PreparedStatement insertStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = getConnection(); PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, exercicisWorkout.getIdExercici());  // Set exerciciId
+            pstmt.setInt(2, exercicisWorkout.getIdWorkouts());  // Set workoutId
+            pstmt.executeUpdate();  // Ejecutar la inserción
+        } catch (SQLException ex) {
+            Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, "Error al insertar la relación entre ejercicios y entrenamientos", ex);
+        }
+    } 
+    
+    public void getUpdateExercici(int id,String newName, String newDescripcio) {
+    String sql = "UPDATE Exercicis SET NomExercici = ?, Descripcio = ? WHERE Id = ?";
+    try (Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, newName);
+        stmt.setString(2, newDescripcio);
+        stmt.setInt(3, id);
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    }
+   
+    public void getDeleteEjercicio(int idEjercicio) {
+    // Primero, eliminamos los registros relacionados en ExercicisWorkouts
+    String deleteReferencesSql = "DELETE FROM ExercicisWorkouts WHERE IdExercici = ?";
+    String deleteEjercicioSql = "DELETE FROM Exercicis WHERE Id = ?";
 
-            // Iteramos por los ejercicios seleccionados
-            for (Exercicis ejercici : ejerciciosSeleccionados) {
-                // Establecemos los parámetros en la sentencia SQL
-                insertStatement.setInt(1, ejercici.getId());  // Id del ejercicio
-                insertStatement.setInt(2, workout.getId());   // Id del entrenamiento
-                insertStatement.addBatch();  // Agregamos a batch para insertar múltiples registros en una sola transacción
+    try (Connection conn = getConnection()) {
+        // Desactivar auto-commit para realizar una transacción
+        conn.setAutoCommit(false);
+
+        try (PreparedStatement stmt1 = conn.prepareStatement(deleteReferencesSql);
+             PreparedStatement stmt2 = conn.prepareStatement(deleteEjercicioSql)) {
+
+            // Eliminar referencias en ExercicisWorkouts
+            stmt1.setInt(1, idEjercicio);
+            stmt1.executeUpdate();
+
+            // Ahora eliminar el ejercicio de Exercicis
+            stmt2.setInt(1, idEjercicio);
+            stmt2.executeUpdate();
+
+            // Confirmar la transacción
+            conn.commit();
+        } catch (SQLException e) {
+            // Revertir la transacción en caso de error
+            conn.rollback();
+            throw e;  // Relanzar la excepción para manejarla en otro lugar
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+    
+    private boolean existeId(String tableName, int id) {
+        String sql = "SELECT COUNT(*) FROM " + tableName + " WHERE Id = ?";
+        try (Connection connection = getConnection(); 
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;  // Si hay al menos una fila, significa que el ID existe
+                }
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, "Error al verificar existencia del ID en la tabla " + tableName, ex);
+        }
+        return false;
+    }
+    
+    public int registerUser(Usuaris u) {
+        int newUserId = 0;
+        Connection connection = getConnection();
+        String sql = "INSERT INTO Usuaris(NOm,Email,PasswordHash,Instructor)"
+                + "VALUES(?,?,?,?)";
+        try {
+            PreparedStatement insertStatement = connection.prepareStatement(sql);
+            insertStatement.setString(1, u.getNom());
+            insertStatement.setString(2, u.getEmail());
+            insertStatement.setString(3, u.getPasswordHash());
+            insertStatement.setBoolean(4, u.isInstructor());
+            newUserId = insertStatement.executeUpdate();
 
-            // Ejecutamos el batch de inserciones
-            insertStatement.executeBatch();
-            connection.commit();  // Confirmamos la transacción
+            insertStatement.close();
+            connection.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return newUserId;
     }
 }

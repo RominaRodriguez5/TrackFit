@@ -3,9 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package mosqueira.trackfit;
-import javax.swing.JFrame;
+import mosqueira.trackfit.views.ListPanelUsuariosAsignados;
+import javax.swing.JOptionPane;
 import mosqueira.trackfit.dto.Usuaris;
-import mosqueira.trackfit.DialogLogin;
+import mosqueira.trackfit.views.DialogLogin;
 
 
 /**
@@ -14,28 +15,30 @@ import mosqueira.trackfit.DialogLogin;
  */
 public class Main extends javax.swing.JFrame {
     private ListPanelUsuariosAsignados listF;
-    //private JPanelGestorWorkouts crearF;
-    JFrame frame=new JFrame();
+    private Usuaris instructor;
     /**
      * Creates new form Main
      */
     public Main() {
         initComponents();
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 620);
-        listF=new ListPanelUsuariosAsignados(this);
+        this.setSize(700, 500);
+        jPanelMain.setBounds(0, 0, 700, 500);
+        getContentPane().add(jPanelMain);
+        setLocationRelativeTo(this);
+        repaint(); 
+    }  
     
-    }
-    
-    public void showListFrame(){
-        listF.setVisible(true);
-        jPanelMain.setVisible(false);
-        listF.setBounds(0, 0,700, 720);
+    public void showListFrame(Usuaris u){
+        this.instructor=u;
+        getContentPane().removeAll();
+        // Crear el panel ListUsers y pasarlo al marco
+        listF = new ListPanelUsuariosAsignados(this, instructor);
+        listF.setBounds(0, 0, 700, 600); // Definir las posiciones y tamaños manualmente
+        // Agregar el panel de usuarios
         getContentPane().add(listF);
-        revalidate();
+        listF.revalidate();
         repaint();
-    }
+        }
   
     /**
      * This method is called from within the constructor to initialize the form.
@@ -52,30 +55,33 @@ public class Main extends javax.swing.JFrame {
         IraDialogo = new javax.swing.JButton();
         jMenuFrame = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
-        jMenuReturn = new javax.swing.JMenuItem();
         jMenuExit = new javax.swing.JMenuItem();
-        jMenuEdit = new javax.swing.JMenu();
-        jMenuICrearWorkouts = new javax.swing.JMenuItem();
+        logout = new javax.swing.JMenuItem();
+        jMenuHelp = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setBackground(new java.awt.Color(255, 204, 102));
-        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.GreyInline"));
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setForeground(java.awt.Color.darkGray);
-        setPreferredSize(new java.awt.Dimension(560, 620));
+        setMinimumSize(new java.awt.Dimension(700, 600));
+        setPreferredSize(new java.awt.Dimension(700, 600));
         setResizable(false);
         getContentPane().setLayout(null);
 
-        jPanelMain.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelMain.setBackground(new java.awt.Color(249, 249, 231));
         jPanelMain.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanelMain.setMinimumSize(new java.awt.Dimension(560, 620));
+        jPanelMain.setForeground(new java.awt.Color(249, 249, 231));
+        jPanelMain.setMinimumSize(new java.awt.Dimension(700, 600));
+        jPanelMain.setPreferredSize(new java.awt.Dimension(700, 600));
         jPanelMain.setRequestFocusEnabled(false);
         jPanelMain.setLayout(null);
 
-        jlogo.setBackground(new java.awt.Color(219, 163, 101));
-        jlogo.setForeground(new java.awt.Color(153, 153, 153));
+        jlogo.setBackground(new java.awt.Color(191, 154, 207));
+        jlogo.setForeground(new java.awt.Color(204, 204, 255));
         jlogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logo.png"))); // NOI18N
         jPanelMain.add(jlogo);
-        jlogo.setBounds(100, 60, 180, 160);
+        jlogo.setBounds(210, 60, 180, 160);
 
         JsitioWeb.setForeground(new java.awt.Color(0, 0, 0));
         JsitioWeb.setText("<html><u>Visita nuestro sitio web</u></html>");
@@ -85,31 +91,27 @@ public class Main extends javax.swing.JFrame {
             }
         });
         jPanelMain.add(JsitioWeb);
-        JsitioWeb.setBounds(130, 230, 130, 40);
+        JsitioWeb.setBounds(240, 230, 130, 40);
 
         IraDialogo.setBackground(new java.awt.Color(255, 204, 153));
         IraDialogo.setForeground(new java.awt.Color(0, 0, 0));
         IraDialogo.setText("Access");
-        IraDialogo.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                IraDialogoMouseEntered(evt);
-            }
-        });
         IraDialogo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 IraDialogoActionPerformed(evt);
             }
         });
         jPanelMain.add(IraDialogo);
-        IraDialogo.setBounds(160, 290, 72, 23);
+        IraDialogo.setBounds(270, 300, 72, 23);
 
         getContentPane().add(jPanelMain);
-        jPanelMain.setBounds(20, -20, 410, 530);
+        jPanelMain.setBounds(0, -20, 630, 530);
 
-        jMenuFrame.setBackground(new java.awt.Color(255, 153, 102));
+        jMenuFrame.setBackground(new java.awt.Color(255, 255, 255));
         jMenuFrame.setBorder(null);
         jMenuFrame.setForeground(new java.awt.Color(255, 153, 51));
 
+        jMenuFile.setBackground(new java.awt.Color(255, 153, 102));
         jMenuFile.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jMenuFile.setText("File");
         jMenuFile.setMinimumSize(new java.awt.Dimension(652, 395));
@@ -119,14 +121,6 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jMenuReturn.setText("Return");
-        jMenuReturn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuReturnActionPerformed(evt);
-            }
-        });
-        jMenuFile.add(jMenuReturn);
-
         jMenuExit.setText("Exit");
         jMenuExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,29 +129,35 @@ public class Main extends javax.swing.JFrame {
         });
         jMenuFile.add(jMenuExit);
 
-        jMenuFrame.add(jMenuFile);
-
-        jMenuEdit.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jMenuEdit.setText("Edit");
-
-        jMenuICrearWorkouts.setText("Crear Workouts");
-        jMenuICrearWorkouts.addActionListener(new java.awt.event.ActionListener() {
+        logout.setText("Logout");
+        logout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuICrearWorkoutsActionPerformed(evt);
+                logoutActionPerformed(evt);
             }
         });
-        jMenuEdit.add(jMenuICrearWorkouts);
+        jMenuFile.add(logout);
 
-        jMenuFrame.add(jMenuEdit);
+        jMenuFrame.add(jMenuFile);
+
+        jMenuHelp.setBackground(new java.awt.Color(255, 153, 102));
+        jMenuHelp.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jMenuHelp.setText("Help");
+
+        jMenuItem1.setText("About");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenuHelp.add(jMenuItem1);
+
+        jMenuFrame.add(jMenuHelp);
 
         setJMenuBar(jMenuFrame);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
-    
-    
-    
+   
     private void JsitioWebMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JsitioWebMouseClicked
         // TODO add your handling code here:
        try {
@@ -170,40 +170,35 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_JsitioWebMouseClicked
 
     private void IraDialogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IraDialogoActionPerformed
-        // TODO add your handling code here:
-        DialogLogin iraDialogo = new DialogLogin(this, true);// Crea el diálogo de login
-        iraDialogo.setVisible(true);
-        
-        Usuaris loggedInUser = iraDialogo.getLoggedInUser(); 
-        if (loggedInUser != null) {
-        listF.setUsuario(loggedInUser);
-        showListFrame(); // Mostrar el panel de lista
-        }
+       // Crear el cuadro de diálogo para el inicio de sesión
+        DialogLogin iraDialogo = new DialogLogin(this, true);
+        iraDialogo.setVisible(true); 
     }//GEN-LAST:event_IraDialogoActionPerformed
 
     private void jMenuFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuFileActionPerformed
-
+        System.exit(0); 
     }//GEN-LAST:event_jMenuFileActionPerformed
-
-    private void jMenuReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuReturnActionPerformed
-             listF.setVisible(false);
-             jPanelMain.setVisible(true);
-             revalidate();
-             repaint();
-    }//GEN-LAST:event_jMenuReturnActionPerformed
-
-    private void jMenuICrearWorkoutsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuICrearWorkoutsActionPerformed
-            
-    }//GEN-LAST:event_jMenuICrearWorkoutsActionPerformed
 
     private void jMenuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuExitActionPerformed
         // TODO add your handling code here:
         setVisible(false);
     }//GEN-LAST:event_jMenuExitActionPerformed
 
-    private void IraDialogoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_IraDialogoMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_IraDialogoMouseEntered
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+          JOptionPane.showMessageDialog(this,
+                "Developed by Romina Marlene Mosqueira Rodriguez\n"
+                + "Course: 2º DAM \n"
+                + "Resources used:\n"
+                + "- Logo: Canva\n"
+                + "- Other resources: Teacher, Classmates, ChatGPT"); 
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
+        getContentPane().add(jPanelMain);
+        jPanelMain.setVisible(true);
+        listF.setVisible(false);
+        JOptionPane.showMessageDialog(this, "Logout successful", "Logout", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_logoutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -243,13 +238,13 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton IraDialogo;
     private javax.swing.JLabel JsitioWeb;
-    private javax.swing.JMenu jMenuEdit;
     private javax.swing.JMenuItem jMenuExit;
     private javax.swing.JMenu jMenuFile;
     private javax.swing.JMenuBar jMenuFrame;
-    private javax.swing.JMenuItem jMenuICrearWorkouts;
-    private javax.swing.JMenuItem jMenuReturn;
+    private javax.swing.JMenu jMenuHelp;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanelMain;
     private javax.swing.JLabel jlogo;
+    private javax.swing.JMenuItem logout;
     // End of variables declaration//GEN-END:variables
 }

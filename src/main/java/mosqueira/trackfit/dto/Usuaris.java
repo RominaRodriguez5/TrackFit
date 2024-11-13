@@ -23,7 +23,7 @@ public class Usuaris {
      
     @Override
     public String toString(){
-        return  this.getNom();
+        return Nom;
     }
     
     public int getId() {
@@ -73,6 +73,7 @@ public class Usuaris {
     public void setInstructor(boolean Instructor) {
         this.Instructor = Instructor;
     }
+
     private int Id;
     private String Nom;
     private String Email;

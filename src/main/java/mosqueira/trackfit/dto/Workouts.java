@@ -1,7 +1,6 @@
 
 package mosqueira.trackfit.dto;
 
-import java.time.LocalDateTime;
 
 /**
  *

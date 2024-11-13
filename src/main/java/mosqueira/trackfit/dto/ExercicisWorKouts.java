@@ -8,6 +8,20 @@ package mosqueira.trackfit.dto;
 public class ExercicisWorKouts {
 
     /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
      * @return the IdExercici
      */
     public int getIdExercici() {
@@ -22,20 +36,21 @@ public class ExercicisWorKouts {
     }
 
     /**
-     * @return the IdWorkout
+     * @return the idWorkouts
      */
-    public int getIdWorkout() {
-        return IdWorkout;
+    public int getIdWorkouts() {
+        return idWorkouts;
     }
 
     /**
-     * @param IdWorkout the IdWorkout to set
+     * @param idWorkouts the idWorkouts to set
      */
-    public void setIdWorkout(int IdWorkout) {
-        this.IdWorkout = IdWorkout;
+    public void setIdWorkouts(int idWorkouts) {
+        this.idWorkouts = idWorkouts;
     }
+    private int id;
+    private int idWorkouts; 
     private int IdExercici;
-    private int IdWorkout; 
 }
 
 

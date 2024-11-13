@@ -2,10 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-package mosqueira.trackfit;
+package mosqueira.trackfit.views;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import javax.swing.JOptionPane;
+import mosqueira.trackfit.Main;
 import mosqueira.trackfit.dataAccess.DataAccess;
 import mosqueira.trackfit.dto.Usuaris;
 
@@ -14,7 +15,6 @@ import mosqueira.trackfit.dto.Usuaris;
  * @author Lulas
  */
 public class DialogLogin extends javax.swing.JDialog {
-
     private Main mainFra;
     private DataAccess da=new DataAccess();
     private Usuaris loggedInUser;
@@ -25,11 +25,12 @@ public class DialogLogin extends javax.swing.JDialog {
     public DialogLogin(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        this.mainFra = (Main)parent;
-
+        initComponents();
+        this.mainFra = (Main)parent;   
+        setLocationRelativeTo(this);// CENTRAR LA VENTANA 
     }
      public Usuaris getLoggedInUser() {
-            return loggedInUser; // Asegúrate de que loggedInUser se establezca cuando el usuario inicie sesión
+            return loggedInUser; 
         }
 
     /**
@@ -59,6 +60,7 @@ public class DialogLogin extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(java.awt.Color.black);
         setIconImages(null);
+        setMinimumSize(new java.awt.Dimension(700, 600));
         setModal(true);
         setPreferredSize(new java.awt.Dimension(500, 600));
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -70,6 +72,9 @@ public class DialogLogin extends javax.swing.JDialog {
 
         jPanel1.setBackground(new java.awt.Color(249, 249, 231));
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel1.setForeground(new java.awt.Color(255, 255, 153));
+        jPanel1.setMinimumSize(new java.awt.Dimension(700, 600));
+        jPanel1.setPreferredSize(new java.awt.Dimension(700, 600));
         jPanel1.setLayout(null);
 
         botonAcceso.setText("Login");
@@ -79,7 +84,7 @@ public class DialogLogin extends javax.swing.JDialog {
             }
         });
         jPanel1.add(botonAcceso);
-        botonAcceso.setBounds(150, 290, 72, 23);
+        botonAcceso.setBounds(300, 440, 72, 23);
 
         ButtonRegister.setText("Register");
         ButtonRegister.addActionListener(new java.awt.event.ActionListener() {
@@ -88,12 +93,13 @@ public class DialogLogin extends javax.swing.JDialog {
             }
         });
         jPanel1.add(ButtonRegister);
-        ButtonRegister.setBounds(200, 240, 90, 23);
+        ButtonRegister.setBounds(370, 380, 90, 23);
 
-        Password.setFont(new java.awt.Font("SansSerif", 3, 12)); // NOI18N
+        Password.setFont(new java.awt.Font("SansSerif", 3, 14)); // NOI18N
+        Password.setForeground(new java.awt.Color(255, 153, 102));
         Password.setText("Introduce Password:");
         jPanel1.add(Password);
-        Password.setBounds(130, 180, 119, 16);
+        Password.setBounds(260, 290, 150, 30);
 
         txtPassword.setText("string");
         txtPassword.addActionListener(new java.awt.event.ActionListener() {
@@ -102,7 +108,7 @@ public class DialogLogin extends javax.swing.JDialog {
             }
         });
         jPanel1.add(txtPassword);
-        txtPassword.setBounds(140, 200, 90, 22);
+        txtPassword.setBounds(290, 330, 90, 22);
 
         checkInstructor.setText("Check");
         checkInstructor.addActionListener(new java.awt.event.ActionListener() {
@@ -111,14 +117,15 @@ public class DialogLogin extends javax.swing.JDialog {
             }
         });
         jPanel1.add(checkInstructor);
-        checkInstructor.setBounds(110, 240, 70, 20);
+        checkInstructor.setBounds(260, 380, 70, 20);
         jPanel1.add(lblInfoMessage);
         lblInfoMessage.setBounds(10, 350, 0, 0);
 
-        Email.setFont(new java.awt.Font("SansSerif", 3, 12)); // NOI18N
+        Email.setFont(new java.awt.Font("SansSerif", 3, 14)); // NOI18N
+        Email.setForeground(new java.awt.Color(255, 153, 102));
         Email.setText("Introduce Email:");
         jPanel1.add(Email);
-        Email.setBounds(140, 130, 106, 16);
+        Email.setBounds(280, 210, 140, 30);
 
         txtEmail.setText("a@b.c");
         txtEmail.addActionListener(new java.awt.event.ActionListener() {
@@ -127,17 +134,17 @@ public class DialogLogin extends javax.swing.JDialog {
             }
         });
         jPanel1.add(txtEmail);
-        txtEmail.setBounds(140, 150, 90, 22);
+        txtEmail.setBounds(290, 260, 90, 22);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logo.png"))); // NOI18N
         jLabel1.setText("jLabel1");
         jLabel1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(255, 153, 51)));
         jLabel1.setPreferredSize(new java.awt.Dimension(150, 150));
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(100, 40, 180, 80);
+        jLabel1.setBounds(250, 50, 180, 160);
 
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(40, 20, 380, 430);
+        jPanel1.setBounds(0, -30, 690, 580);
 
         jMenufile.setText("File");
         jMenufile.addActionListener(new java.awt.event.ActionListener() {
@@ -177,7 +184,7 @@ public class DialogLogin extends javax.swing.JDialog {
         nuevoUsuario.setInstructor(checkInstructor.isSelected());
 
         DataAccess da = new DataAccess();
-        int nuevoUsuarioId = da.registerUser(nuevoUsuario);
+         int nuevoUsuarioId = da.registerUser(nuevoUsuario);
         nuevoUsuarioId = da.registerUser(nuevoUsuario);
         nuevoUsuario.setId(nuevoUsuarioId);
         lblInfoMessage.setText("User registered successFully with Id " + nuevoUsuarioId);
@@ -193,10 +200,9 @@ public class DialogLogin extends javax.swing.JDialog {
     }//GEN-LAST:event_checkInstructorActionPerformed
 
     private void botonAccesoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAccesoActionPerformed
-
-        try {
+     try {
             // Obtiene el usuario desde el acceso de datos usando el email ingresado
-            Usuaris usuari = DataAccess.getUsuario(txtEmail.getText());
+            Usuaris usuari = DataAccess.getUser(txtEmail.getText());
             if (usuari != null && usuari.isInstructor()) {
                 // Comprobar contraseña
                 char[] passwordToVerify = txtPassword.getPassword();
@@ -206,7 +212,7 @@ public class DialogLogin extends javax.swing.JDialog {
                     loggedInUser = usuari;
                     // Si la verificación es correcta
                     JOptionPane.showMessageDialog(this, "Login successful. Welcome " + usuari.getNom()); 
-                    mainFra.showListFrame();
+                    mainFra.showListFrame(loggedInUser);
                     dispose(); // Cierra el cuadro de diálogo de acceso
                 } else {
                     JOptionPane.showMessageDialog(this, "Error: Invalid password");
@@ -217,7 +223,6 @@ public class DialogLogin extends javax.swing.JDialog {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error Access: " + e.getMessage());
         }
-
     }//GEN-LAST:event_botonAccesoActionPerformed
 
     private void jMenufileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenufileActionPerformed
@@ -236,44 +241,6 @@ public class DialogLogin extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DialogLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DialogLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DialogLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DialogLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(() -> {
-            DialogLogin dialog = new DialogLogin(new Main(), true);
-            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosing(java.awt.event.WindowEvent e) {
-                    System.exit(0);
-                }
-            });
-            dialog.setVisible(true);
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonRegister;
     private javax.swing.JLabel Email;

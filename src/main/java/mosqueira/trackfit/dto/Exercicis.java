@@ -26,7 +26,7 @@ public class Exercicis {
     
     @Override
      public String toString(){
-        return  this.getNomExercici()+" "+this.Id;
+        return  this.getNomExercici();
     }
     /**
      * @return the NomExercici
