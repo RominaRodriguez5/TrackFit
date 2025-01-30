@@ -3,43 +3,63 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package mosqueira.trackfit;
+
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
 import mosqueira.trackfit.views.ListPanelUsuariosAsignados;
 import javax.swing.JOptionPane;
 import mosqueira.trackfit.dto.Usuaris;
 import mosqueira.trackfit.views.DialogLogin;
-
 
 /**
  *
  * @author Lulas
  */
 public class Main extends javax.swing.JFrame {
+
     private ListPanelUsuariosAsignados listF;
     private Usuaris instructor;
-    /**
-     * Creates new form Main
-     */
+    private JCheckBoxMenuItem darkMode;
+
     public Main() {
         initComponents();
-        this.setSize(700, 500);
-        jPanelMain.setBounds(0, 0, 700, 500);
+        this.setSize(800, 800);
+        jPanelMain.setBounds(0, 0, 900, 800);
         getContentPane().add(jPanelMain);
         setLocationRelativeTo(this);
-        repaint(); 
-    }  
-    
-    public void showListFrame(Usuaris u){
-        this.instructor=u;
+//        repaint(); 
+
+        // Crear un ícono para el botón Access
+        ImageIcon accessIcon = resizeIcon("/images/access_icon1.png", 100, 100); // Redimensionamos el ícono
+        IraDialogo.setIcon(accessIcon);
+        // Redimensionar iconos en el menú "File"
+        jMenuFile.setIcon(resizeIcon("/images/file_icon.png", 16, 16));
+        jMenuExit.setIcon(resizeIcon("/images/exit_icon.png", 16, 16));
+        logout.setIcon(resizeIcon("/images/logout_icon.png", 16, 16));
+        jMenuHelp.setIcon(resizeIcon("/images/help_icon.png", 16, 16));
+        jMenuItem1.setIcon(resizeIcon("/images/about_icon.png", 16, 16));
+        jMenuWeb.setIcon(resizeIcon("/images/web_icon.png", 16, 16)); // Asignamos el ícono al ítem
+        // Opción "Dark Mode"
+        darkMode = new JCheckBoxMenuItem("Modo oscuro");
+        darkMode.addActionListener(evt -> toggleDarkMode());
+        jMenuHelp.add(darkMode);
+    }
+
+    public void showListFrame(Usuaris u) {
+        this.instructor = u;
         getContentPane().removeAll();
         // Crear el panel ListUsers y pasarlo al marco
-        listF = new ListPanelUsuariosAsignados(this, instructor);
-        listF.setBounds(0, 0, 700, 600); // Definir las posiciones y tamaños manualmente
+        listF = new ListPanelUsuariosAsignados(this, instructor, isDarkModeEnabled());
+        listF.setBounds(0, 0, 900, 800); // Definir las posiciones y tamaños manualmente
         // Agregar el panel de usuarios
         getContentPane().add(listF);
         listF.revalidate();
         repaint();
-        }
-  
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -51,7 +71,6 @@ public class Main extends javax.swing.JFrame {
 
         jPanelMain = new javax.swing.JPanel();
         jlogo = new javax.swing.JLabel();
-        JsitioWeb = new javax.swing.JLabel();
         IraDialogo = new javax.swing.JButton();
         jMenuFrame = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
@@ -59,6 +78,7 @@ public class Main extends javax.swing.JFrame {
         logout = new javax.swing.JMenuItem();
         jMenuHelp = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuWeb = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.GreyInline"));
@@ -81,31 +101,22 @@ public class Main extends javax.swing.JFrame {
         jlogo.setForeground(new java.awt.Color(204, 204, 255));
         jlogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logo.png"))); // NOI18N
         jPanelMain.add(jlogo);
-        jlogo.setBounds(210, 60, 180, 160);
+        jlogo.setBounds(300, 110, 180, 200);
 
-        JsitioWeb.setForeground(new java.awt.Color(0, 0, 0));
-        JsitioWeb.setText("<html><u>Visita nuestro sitio web</u></html>");
-        JsitioWeb.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                JsitioWebMouseClicked(evt);
-            }
-        });
-        jPanelMain.add(JsitioWeb);
-        JsitioWeb.setBounds(240, 230, 130, 40);
-
-        IraDialogo.setBackground(new java.awt.Color(255, 204, 153));
-        IraDialogo.setForeground(new java.awt.Color(0, 0, 0));
-        IraDialogo.setText("Access");
+        IraDialogo.setBackground(new java.awt.Color(255, 255, 255));
+        IraDialogo.setBorder(null);
+        IraDialogo.setBorderPainted(false);
+        IraDialogo.setContentAreaFilled(false);
         IraDialogo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 IraDialogoActionPerformed(evt);
             }
         });
         jPanelMain.add(IraDialogo);
-        IraDialogo.setBounds(270, 300, 72, 23);
+        IraDialogo.setBounds(350, 410, 90, 80);
 
         getContentPane().add(jPanelMain);
-        jPanelMain.setBounds(0, -20, 630, 530);
+        jPanelMain.setBounds(0, -20, 810, 750);
 
         jMenuFrame.setBackground(new java.awt.Color(255, 255, 255));
         jMenuFrame.setBorder(null);
@@ -153,45 +164,31 @@ public class Main extends javax.swing.JFrame {
 
         jMenuFrame.add(jMenuHelp);
 
+        jMenuWeb.setBackground(new java.awt.Color(255, 153, 51));
+        jMenuWeb.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jMenuWeb.setText("Web");
+        jMenuWeb.setMinimumSize(new java.awt.Dimension(29, 20));
+        jMenuWeb.setPreferredSize(new java.awt.Dimension(29, 20));
+        jMenuWeb.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenuWebMouseClicked(evt);
+            }
+        });
+        jMenuFrame.add(jMenuWeb);
+
         setJMenuBar(jMenuFrame);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-   
-    private void JsitioWebMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JsitioWebMouseClicked
-        // TODO add your handling code here:
-       try {
-        // Abre la URL en el navegador
-            String url = "http://www.ejemplo.com/"; // Reemplaza con la URL de tu aplicación
-            java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
-        } catch (Exception e) {
-            e.printStackTrace();
-        } 
-    }//GEN-LAST:event_JsitioWebMouseClicked
-
-    private void IraDialogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IraDialogoActionPerformed
-       // Crear el cuadro de diálogo para el inicio de sesión
-        DialogLogin iraDialogo = new DialogLogin(this, true);
-        iraDialogo.setVisible(true); 
-    }//GEN-LAST:event_IraDialogoActionPerformed
 
     private void jMenuFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuFileActionPerformed
-        System.exit(0); 
+        // Asignar icono redimensionado al menú
+        System.exit(0);
     }//GEN-LAST:event_jMenuFileActionPerformed
 
     private void jMenuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuExitActionPerformed
-        // TODO add your handling code here:
         setVisible(false);
     }//GEN-LAST:event_jMenuExitActionPerformed
-
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-          JOptionPane.showMessageDialog(this,
-                "Developed by Romina Marlene Mosqueira Rodriguez\n"
-                + "Course: 2º DAM \n"
-                + "Resources used:\n"
-                + "- Logo: Canva\n"
-                + "- Other resources: Teacher, Classmates, ChatGPT"); 
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
         getContentPane().add(jPanelMain);
@@ -200,51 +197,85 @@ public class Main extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Logout successful", "Logout", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_logoutActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // Asignar icono redimensionado al menú
+        ImageIcon icon = resizeIcon("/images/about_icon.png", 20, 20); // 20x20 es el tamaño deseado
+        JOptionPane.showMessageDialog(this,
+                "Developed by Romina Marlene Mosqueira Rodriguez\n"
+                + "Course: 2º DAM \n"
+                + "Resources used:\n"
+                + "- Logo: Canva\n"
+                + "- Other resources: Teacher, Classmates, ChatGPT",
+                "About",
+                JOptionPane.INFORMATION_MESSAGE,
+                icon);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void IraDialogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IraDialogoActionPerformed
+        // Crear el cuadro de diálogo para el inicio de sesión
+        DialogLogin iraDialogo = new DialogLogin(this, true);
+        iraDialogo.setVisible(true);
+    }//GEN-LAST:event_IraDialogoActionPerformed
+
+    private void jMenuWebMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuWebMouseClicked
+        // Crear el ítem de menú para "Visitar nuestro sitio web"
+        try {
+            String url = "http://www.ejemplo.com/"; // Cambia esta URL por la de tu sitio web
+            java.awt.Desktop.getDesktop().browse(java.net.URI.create(url)); // Abre la URL en el navegador predeterminado
+        } catch (Exception e) {
+            e.printStackTrace(); // Manejo de errores si no se puede abrir el sitio
+        }
+    }//GEN-LAST:event_jMenuWebMouseClicked
+
+    private void toggleDarkMode() {
+        if (darkMode.isSelected()) {
+            // Cambiar colores a modo oscuro
+            jPanelMain.setBackground(Color.DARK_GRAY);
+            jPanelMain.setForeground(Color.WHITE);
+        } else {
+            // Cambiar colores a modo claro
+            jPanelMain.setBackground(new Color(249, 249, 231));
+            jPanelMain.setForeground(Color.BLACK);
+        }
+        // Si existe listF, aplicar el modo oscuro también allí
+        if (listF != null) {
+            listF.applyDarkMode(darkMode.isSelected());
+        }
+    }
+
+   private ImageIcon resizeIcon(String path, int width, int height) {
+        ImageIcon icon = new ImageIcon(getClass().getResource(path));
+        Image image = icon.getImage();
+        Image newImage = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
+        return new ImageIcon(newImage);
+    }
+
+    public boolean isDarkModeEnabled() {
+        return darkMode.isSelected();
+    }
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Main().setVisible(true);
             }
-        });     
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton IraDialogo;
-    private javax.swing.JLabel JsitioWeb;
     private javax.swing.JMenuItem jMenuExit;
     private javax.swing.JMenu jMenuFile;
     private javax.swing.JMenuBar jMenuFrame;
     private javax.swing.JMenu jMenuHelp;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenu jMenuWeb;
     private javax.swing.JPanel jPanelMain;
     private javax.swing.JLabel jlogo;
     private javax.swing.JMenuItem logout;
     // End of variables declaration//GEN-END:variables
+
 }

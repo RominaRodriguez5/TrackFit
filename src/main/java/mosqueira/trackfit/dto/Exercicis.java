@@ -23,6 +23,7 @@ public class Exercicis {
     private String NomExercici;
     private String Descripcio;
     private int Id;
+    private byte[] DemoFoto;
     
     @Override
      public String toString(){
@@ -54,6 +55,20 @@ public class Exercicis {
      */
     public void setDescripcio(String Descripcio) {
         this.Descripcio = Descripcio;
+    }
+
+    /**
+     * @return the DemoFoto
+     */
+    public byte[] getDemoFoto() {
+        return DemoFoto;
+    }
+
+    /**
+     * @param DemoFoto the DemoFoto to set
+     */
+    public void setDemoFoto(byte[] DemoFoto) {
+        this.DemoFoto = DemoFoto;
     }
 
 }

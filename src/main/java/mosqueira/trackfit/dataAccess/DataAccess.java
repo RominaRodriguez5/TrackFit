@@ -37,32 +37,30 @@ public class DataAccess {
         return connection;
     }
 
-    public ArrayList<Usuaris> getAllUsers() {
-        ArrayList<Usuaris> usuarios = new ArrayList<>();
-        String sql = "SELECT Nom FROM Usuaris";
+   public  ArrayList<Usuaris> getAllUsers() {
+        ArrayList<Usuaris> usuaris = new ArrayList<>();
+        String sql = "SELECT * FROM Usuaris WHERE Instructor=0";
         Connection connection = getConnection();
         try {
             PreparedStatement selectStatement = connection.prepareStatement(sql);
             ResultSet resultSet = selectStatement.executeQuery();
+
             while (resultSet.next()) {
                 Usuaris user = new Usuaris();
                 user.setId(resultSet.getInt("Id"));
                 user.setNom(resultSet.getString("Nom"));
-                //user.setEmail(resultSet.getString("Email"));
-                //user.setPasswordHash(resultSet.getString("PasswordHash"));
-                //user.setFoto("Foto");
-                //user.setInstructor(resultSet.getBoolean("isInstructor"));
-                usuarios.add(user);
+                user.setEmail(resultSet.getString("Email"));
+                user.setPasswordHash(resultSet.getString("PasswordHash"));
+                user.setInstructor(resultSet.getBoolean("Instructor"));
+                usuaris.add(user);
             }
-            selectStatement.close();
-            connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return usuarios;
+        return usuaris;
     }
 
-    public static Usuaris getUser(String email) {
+    public Usuaris getUser(String email) {
         Usuaris user = new Usuaris();
         String sql = "SELECT * FROM Usuaris WHERE Email=?";
         Connection connection = getConnection();
@@ -86,10 +84,15 @@ public class DataAccess {
         return user;
     }
 
-    public ArrayList<Usuaris> getAllUsersInstructor(int instructorId) {
+    public List<Usuaris> getAllUsersInstructor(Usuaris instructor) {
         ArrayList<Usuaris> usuaris = new ArrayList<>();
-        String sql = "SELECT * FROM Usuaris WHERE Instructor = 0 AND AssignedInstructor = ?";
-
+        if(instructor == null){
+            return usuaris;    
+            
+        }
+        int instructorId=instructor.getId();
+        
+        String sql = "SELECT * FROM Usuaris WHERE AssignedInstructor = ? AND Instructor != 1";
         Connection connection = getConnection();
         try {
             PreparedStatement selectStatement = connection.prepareStatement(sql);
@@ -102,7 +105,7 @@ public class DataAccess {
                 user.setNom(resultSet.getString("Nom"));
                 user.setEmail(resultSet.getString("Email"));
                 user.setPasswordHash(resultSet.getString("PasswordHash"));
-                //user.setFoto(resultSet.getBytes("Foto"));
+               // user.setFoto(resultSet.getBytes("Foto"));
                 user.setInstructor(resultSet.getBoolean("Instructor"));
                 usuaris.add(user);  // Añadir el usuario a la lista
             }
@@ -120,7 +123,7 @@ public class DataAccess {
         String sql = "SELECT Id, UserId, ForDate, Comments FROM Workouts WHERE UserId = ?";
 
         try (
-                Connection connection = getConnection(); PreparedStatement selectStatement = connection.prepareStatement(sql)) {
+            Connection connection = getConnection(); PreparedStatement selectStatement = connection.prepareStatement(sql)) {
             selectStatement.setInt(1, userId);
             ResultSet resultSet = selectStatement.executeQuery();
             while (resultSet.next()) {
@@ -199,6 +202,7 @@ public class DataAccess {
                 infoExercici.setNomExercici(resultSet.getString("NomExercici"));
                 infoExercici.setDescripcio(resultSet.getString("Descripcio"));
                 infoExercici.setId(resultSet.getInt("Id"));
+                //infoExercici.setDemoFoto(resultSet.getBytes("Foto"));
                 infoExercicis.add(infoExercici);
             }
             selectStatement.close();
@@ -209,19 +213,18 @@ public class DataAccess {
         return infoExercicis;
     }
 
-    public void getSaveExercici(Exercicis exercici) {
+    public void getSaveExercici(String nom,String descripcion) {
         String sql = "INSERT INTO Exercicis (NomExercici, Descripcio) VALUES (?, ?)";
         Connection connection = getConnection();
 
         try {
             PreparedStatement insertStatement = connection.prepareStatement(sql);
-            insertStatement.setString(1, exercici.getNomExercici());
-            insertStatement.setString(2, exercici.getDescripcio());
+            insertStatement.setString(1, nom);
+            insertStatement.setString(2, descripcion);
 
             int rowsAffected = insertStatement.executeUpdate();
             if (rowsAffected > 0);
             
-
             insertStatement.close();
             connection.close();
         } catch (SQLException ex) {
@@ -358,4 +361,5 @@ public class DataAccess {
         }
         return newUserId;
     }
+
 }
