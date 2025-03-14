@@ -4,20 +4,22 @@
  */
 package mosqueira.trackfit;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Image;
-import java.awt.MediaTracker;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import mosqueira.trackfit.views.ListPanelUsuariosAsignados;
 import javax.swing.JOptionPane;
 import mosqueira.trackfit.dto.Usuaris;
 import mosqueira.trackfit.views.DialogLogin;
+import net.miginfocom.swing.MigLayout;
 
 /**
  *
  * @author Lulas
  */
+
 public class Main extends javax.swing.JFrame {
 
     private ListPanelUsuariosAsignados listF;
@@ -27,22 +29,27 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         initComponents();
         this.setSize(800, 800);
-        jPanelMain.setBounds(0, 0, 900, 800);
-        getContentPane().add(jPanelMain);
         setLocationRelativeTo(this);
-//        repaint(); 
+        setLayout(null);
+        jPanelMain.setLayout(new MigLayout("wrap, align center", "[center]", "[][]40[]"));
+        jPanelMain.add(jlogo, "align center, gaptop 50");
+        getContentPane().add(jPanelMain);
+        jPanelMain.add(IraDialogo, "align center, gaptop 50");
+        // Añadir jPanelMain al centro del contenedor principal
+        getContentPane().add(jPanelMain, BorderLayout.CENTER);
+        setupIconsAndMenus();
 
-        // Crear un ícono para el botón Access
-        ImageIcon accessIcon = resizeIcon("/images/access_icon1.png", 100, 100); // Redimensionamos el ícono
+        
+    }
+    private void setupIconsAndMenus() {
+        ImageIcon accessIcon = resizeIcon("/images/access_icon1.png", 100, 100);
         IraDialogo.setIcon(accessIcon);
-        // Redimensionar iconos en el menú "File"
         jMenuFile.setIcon(resizeIcon("/images/file_icon.png", 16, 16));
         jMenuExit.setIcon(resizeIcon("/images/exit_icon.png", 16, 16));
         logout.setIcon(resizeIcon("/images/logout_icon.png", 16, 16));
         jMenuHelp.setIcon(resizeIcon("/images/help_icon.png", 16, 16));
         jMenuItem1.setIcon(resizeIcon("/images/about_icon.png", 16, 16));
-        jMenuWeb.setIcon(resizeIcon("/images/web_icon.png", 16, 16)); // Asignamos el ícono al ítem
-        // Opción "Dark Mode"
+        jMenuWeb.setIcon(resizeIcon("/images/web_icon.png", 16, 16));
         darkMode = new JCheckBoxMenuItem("Modo oscuro");
         darkMode.addActionListener(evt -> toggleDarkMode());
         jMenuHelp.add(darkMode);
@@ -95,13 +102,13 @@ public class Main extends javax.swing.JFrame {
         jPanelMain.setMinimumSize(new java.awt.Dimension(700, 600));
         jPanelMain.setPreferredSize(new java.awt.Dimension(700, 600));
         jPanelMain.setRequestFocusEnabled(false);
-        jPanelMain.setLayout(null);
+        jPanelMain.setLayout(new java.awt.BorderLayout());
 
         jlogo.setBackground(new java.awt.Color(191, 154, 207));
         jlogo.setForeground(new java.awt.Color(204, 204, 255));
         jlogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logo.png"))); // NOI18N
-        jPanelMain.add(jlogo);
-        jlogo.setBounds(300, 110, 180, 200);
+        jlogo.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jPanelMain.add(jlogo, java.awt.BorderLayout.CENTER);
 
         IraDialogo.setBackground(new java.awt.Color(255, 255, 255));
         IraDialogo.setBorder(null);
@@ -112,8 +119,7 @@ public class Main extends javax.swing.JFrame {
                 IraDialogoActionPerformed(evt);
             }
         });
-        jPanelMain.add(IraDialogo);
-        IraDialogo.setBounds(350, 410, 90, 80);
+        jPanelMain.add(IraDialogo, java.awt.BorderLayout.PAGE_START);
 
         getContentPane().add(jPanelMain);
         jPanelMain.setBounds(0, -20, 810, 750);
@@ -228,42 +234,42 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuWebMouseClicked
 
     private void toggleDarkMode() {
-        if (darkMode.isSelected()) {
-            // Cambiar colores a modo oscuro
-            jPanelMain.setBackground(Color.DARK_GRAY);
-            jPanelMain.setForeground(Color.WHITE);
-        } else {
-            // Cambiar colores a modo claro
-            jPanelMain.setBackground(new Color(249, 249, 231));
-            jPanelMain.setForeground(Color.BLACK);
-        }
-        // Si existe listF, aplicar el modo oscuro también allí
-        if (listF != null) {
-            listF.applyDarkMode(darkMode.isSelected());
-        }
+    if (darkMode.isSelected()) {
+        // Cambiar colores a modo oscuro
+        jPanelMain.setBackground(Color.DARK_GRAY);
+        jPanelMain.setForeground(Color.WHITE);
+    } else {
+        // Cambiar colores a modo claro
+        jPanelMain.setBackground(new Color(249, 249, 231));
+        jPanelMain.setForeground(Color.BLACK);
     }
+    // Si existe listF, aplicar el modo oscuro también allí
+    if (listF != null) {
+        listF.applyDarkMode(darkMode.isSelected());
+    }
+}
 
    private ImageIcon resizeIcon(String path, int width, int height) {
-        ImageIcon icon = new ImageIcon(getClass().getResource(path));
-        Image image = icon.getImage();
-        Image newImage = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
-        return new ImageIcon(newImage);
-    }
+    ImageIcon icon = new ImageIcon(getClass().getResource(path));
+    Image image = icon.getImage();
+    Image newImage = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
+    return new ImageIcon(newImage);
+}
 
     public boolean isDarkModeEnabled() {
-        return darkMode.isSelected();
-    }
+    return darkMode.isSelected();
+}
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Main().setVisible(true);
-            }
-        });
-    }
+    public static void main(String [] args) {
+    java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+            new Main().setVisible(true);
+        }
+    });
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton IraDialogo;

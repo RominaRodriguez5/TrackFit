@@ -71,6 +71,7 @@ public class ListPanelUsuariosAsignados extends javax.swing.JPanel {
         if (isDarkMode) {
             this.setBackground(Color.DARK_GRAY);
             this.setForeground(Color.WHITE);
+            
             // Cambiar colores de componentes internos
             for (java.awt.Component component : this.getComponents()) {
                 component.setBackground(Color.DARK_GRAY);
@@ -379,6 +380,7 @@ public class ListPanelUsuariosAsignados extends javax.swing.JPanel {
         DialogWorkouts workouts = new DialogWorkouts(mainFra, true);
         workouts.setVisible(true);
     }//GEN-LAST:event_jButtonAddWorkoutsActionPerformed
+    
     private void listExercicisAssignedWorkouts(List<Exercicis> listExercicis) {
         //MUESTRA LA LISTA del ejercicio que esta ASIGNADO al workout
         DefaultListModel<String> listModel = new DefaultListModel<>();

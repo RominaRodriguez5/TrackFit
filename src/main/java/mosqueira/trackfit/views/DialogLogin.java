@@ -94,7 +94,6 @@ public class DialogLogin extends javax.swing.JDialog {
         botonAcceso = new javax.swing.JButton();
         Password = new javax.swing.JLabel();
         txtPassword = new javax.swing.JPasswordField();
-        lblInfoMessage = new javax.swing.JLabel();
         Email = new javax.swing.JLabel();
         txtEmail = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -152,8 +151,6 @@ public class DialogLogin extends javax.swing.JDialog {
         });
         jPanel1.add(txtPassword);
         txtPassword.setBounds(290, 330, 100, 22);
-        jPanel1.add(lblInfoMessage);
-        lblInfoMessage.setBounds(10, 350, 0, 0);
 
         Email.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         Email.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/email_icon.png"))); // NOI18N
@@ -270,7 +267,6 @@ public class DialogLogin extends javax.swing.JDialog {
     private javax.swing.JMenuItem jMenuReturn;
     private javax.swing.JMenu jMenufile;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lblInfoMessage;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JPasswordField txtPassword;
     // End of variables declaration//GEN-END:variables
