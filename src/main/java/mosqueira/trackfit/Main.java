@@ -1,15 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package mosqueira.trackfit;
 
+import mosqueira.trackfit.views.ThemeManager;
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
-import mosqueira.trackfit.views.ListPanelUsuariosAsignados;
+import javax.swing.JFrame;
+import mosqueira.trackfit.views.PanelUsuariosAsignados;
 import javax.swing.JOptionPane;
 import mosqueira.trackfit.dto.Usuaris;
 import mosqueira.trackfit.views.DialogLogin;
@@ -17,53 +13,84 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  *
- * @author Lulas
+ * @author Romina Mosqueira
  */
-
 public class Main extends javax.swing.JFrame {
 
-    private ListPanelUsuariosAsignados listF;
+    private PanelUsuariosAsignados listF;
     private Usuaris instructor;
     private JCheckBoxMenuItem darkMode;
 
     public Main() {
         initComponents();
-        this.setSize(800, 800);
-        setLocationRelativeTo(this);
-        setLayout(null);
+        setupWindow();
+        setupIconsAndMenus();
+    }
+
+    public void setupWindow() {
+        setLocationRelativeTo(this); // Centra la ventana
+        setSize(900, 600);
         jPanelMain.setLayout(new MigLayout("wrap, align center", "[center]", "[][]40[]"));
         jPanelMain.add(jlogo, "align center, gaptop 50");
-        getContentPane().add(jPanelMain);
         jPanelMain.add(IraDialogo, "align center, gaptop 50");
         // Añadir jPanelMain al centro del contenedor principal
         getContentPane().add(jPanelMain, BorderLayout.CENTER);
-        setupIconsAndMenus();
-
-        
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                jPanelMain.revalidate();
+                jPanelMain.repaint();
+            }
+        });
+        // Agregar un listener para la confirmación de salida
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                confirmExit();
+            }
+        });
     }
+
+    private void confirmExit() {
+        int option = JOptionPane.showConfirmDialog(Main.this,
+                "¿Estás seguro de que deseas salir?", "Confirmar salida",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (option == JOptionPane.YES_OPTION) {
+            // Si selecciona "Sí", cierra la aplicación
+            System.exit(0);
+        } else {
+           
+            setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        }
+    }
+
     private void setupIconsAndMenus() {
-        ImageIcon accessIcon = resizeIcon("/images/access_icon1.png", 100, 100);
-        IraDialogo.setIcon(accessIcon);
-        jMenuFile.setIcon(resizeIcon("/images/file_icon.png", 16, 16));
-        jMenuExit.setIcon(resizeIcon("/images/exit_icon.png", 16, 16));
-        logout.setIcon(resizeIcon("/images/logout_icon.png", 16, 16));
-        jMenuHelp.setIcon(resizeIcon("/images/help_icon.png", 16, 16));
-        jMenuItem1.setIcon(resizeIcon("/images/about_icon.png", 16, 16));
-        jMenuWeb.setIcon(resizeIcon("/images/web_icon.png", 16, 16));
+        // Configurar ítems del menú de archivo
+        jMenuExit.addActionListener(this::jMenuExitActionPerformed);
+        logout.addActionListener(this::logoutActionPerformed);
+
+        // Configurar ítems del menú de ayuda
+        jMenuItem1.addActionListener(this::jMenuItem1ActionPerformed);
+
+        // Configurar ítem de modo oscuro
         darkMode = new JCheckBoxMenuItem("Modo oscuro");
-        darkMode.addActionListener(evt -> toggleDarkMode());
-        jMenuHelp.add(darkMode);
+        darkMode.addActionListener(evt -> toggleTheme());
+        jMenuHelp.add(darkMode); // Añadir al menú de ayuda
+
+        // Configurar íconos para los botones y menús
+        IraDialogo.setIcon(ThemeManager.resizeIcon("/images/access_icon1.png", 100, 100));
+        jlogo.setIcon(ThemeManager.resizeIcon("/images/logo.png", 250, 180));
     }
 
     public void showListFrame(Usuaris u) {
         this.instructor = u;
-        getContentPane().removeAll();
-        // Crear el panel ListUsers y pasarlo al marco
-        listF = new ListPanelUsuariosAsignados(this, instructor, isDarkModeEnabled());
-        listF.setBounds(0, 0, 900, 800); // Definir las posiciones y tamaños manualmente
-        // Agregar el panel de usuarios
-        getContentPane().add(listF);
-        listF.revalidate();
+        getContentPane().removeAll();  // Limpiar contenido actual
+        getContentPane().setLayout(new BorderLayout()); // Mantener layout flexible
+
+        listF = new PanelUsuariosAsignados(this, instructor, isDarkModeEnabled());
+
+        getContentPane().add(listF, BorderLayout.CENTER); // Asegurar que ocupa todo el espacio
+
+        // Redibujar la ventana para que se apliquen los cambios
+        revalidate();
         repaint();
     }
 
@@ -77,8 +104,8 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanelMain = new javax.swing.JPanel();
-        jlogo = new javax.swing.JLabel();
         IraDialogo = new javax.swing.JButton();
+        jlogo = new javax.swing.JLabel();
         jMenuFrame = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
         jMenuExit = new javax.swing.JMenuItem();
@@ -92,37 +119,41 @@ public class Main extends javax.swing.JFrame {
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setForeground(java.awt.Color.darkGray);
         setMinimumSize(new java.awt.Dimension(700, 600));
-        setPreferredSize(new java.awt.Dimension(700, 600));
-        setResizable(false);
-        getContentPane().setLayout(null);
 
         jPanelMain.setBackground(new java.awt.Color(249, 249, 231));
         jPanelMain.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanelMain.setForeground(new java.awt.Color(249, 249, 231));
-        jPanelMain.setMinimumSize(new java.awt.Dimension(700, 600));
-        jPanelMain.setPreferredSize(new java.awt.Dimension(700, 600));
+        jPanelMain.setPreferredSize(new java.awt.Dimension(900, 900));
         jPanelMain.setRequestFocusEnabled(false);
-        jPanelMain.setLayout(new java.awt.BorderLayout());
-
-        jlogo.setBackground(new java.awt.Color(191, 154, 207));
-        jlogo.setForeground(new java.awt.Color(204, 204, 255));
-        jlogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logo.png"))); // NOI18N
-        jlogo.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        jPanelMain.add(jlogo, java.awt.BorderLayout.CENTER);
+        jPanelMain.setLayout(null);
 
         IraDialogo.setBackground(new java.awt.Color(255, 255, 255));
+        IraDialogo.setToolTipText("");
         IraDialogo.setBorder(null);
         IraDialogo.setBorderPainted(false);
         IraDialogo.setContentAreaFilled(false);
+        IraDialogo.setDefaultCapable(false);
+        IraDialogo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         IraDialogo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 IraDialogoActionPerformed(evt);
             }
         });
-        jPanelMain.add(IraDialogo, java.awt.BorderLayout.PAGE_START);
+        jPanelMain.add(IraDialogo);
+        IraDialogo.setBounds(540, 340, 180, 120);
 
-        getContentPane().add(jPanelMain);
-        jPanelMain.setBounds(0, -20, 810, 750);
+        jlogo.setBackground(new java.awt.Color(191, 154, 207));
+        jlogo.setForeground(new java.awt.Color(204, 204, 255));
+        jlogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jlogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logo.png"))); // NOI18N
+        jlogo.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jlogo.setRequestFocusEnabled(false);
+        jlogo.setVerifyInputWhenFocusTarget(false);
+        jlogo.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        jPanelMain.add(jlogo);
+        jlogo.setBounds(500, 90, 250, 180);
+
+        getContentPane().add(jPanelMain, java.awt.BorderLayout.CENTER);
 
         jMenuFrame.setBackground(new java.awt.Color(255, 255, 255));
         jMenuFrame.setBorder(null);
@@ -189,23 +220,21 @@ public class Main extends javax.swing.JFrame {
 
     private void jMenuFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuFileActionPerformed
         // Asignar icono redimensionado al menú
-        System.exit(0);
     }//GEN-LAST:event_jMenuFileActionPerformed
 
     private void jMenuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuExitActionPerformed
-        setVisible(false);
+        confirmExit();
     }//GEN-LAST:event_jMenuExitActionPerformed
 
     private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
         getContentPane().add(jPanelMain);
         jPanelMain.setVisible(true);
         listF.setVisible(false);
-        JOptionPane.showMessageDialog(this, "Logout successful", "Logout", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_logoutActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // Asignar icono redimensionado al menú
-        ImageIcon icon = resizeIcon("/images/about_icon.png", 20, 20); // 20x20 es el tamaño deseado
+        ImageIcon icon = ThemeManager.resizeIcon("/images/about_icon.png", 20, 20); // 20x20 es el tamaño deseado
         JOptionPane.showMessageDialog(this,
                 "Developed by Romina Marlene Mosqueira Rodriguez\n"
                 + "Course: 2º DAM \n"
@@ -218,9 +247,10 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void IraDialogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IraDialogoActionPerformed
-        // Crear el cuadro de diálogo para el inicio de sesión
         DialogLogin iraDialogo = new DialogLogin(this, true);
+        iraDialogo.applyDarkMode(isDarkModeEnabled());
         iraDialogo.setVisible(true);
+
     }//GEN-LAST:event_IraDialogoActionPerformed
 
     private void jMenuWebMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuWebMouseClicked
@@ -232,44 +262,42 @@ public class Main extends javax.swing.JFrame {
             e.printStackTrace(); // Manejo de errores si no se puede abrir el sitio
         }
     }//GEN-LAST:event_jMenuWebMouseClicked
-
-    private void toggleDarkMode() {
-    if (darkMode.isSelected()) {
-        // Cambiar colores a modo oscuro
-        jPanelMain.setBackground(Color.DARK_GRAY);
-        jPanelMain.setForeground(Color.WHITE);
-    } else {
-        // Cambiar colores a modo claro
-        jPanelMain.setBackground(new Color(249, 249, 231));
-        jPanelMain.setForeground(Color.BLACK);
+    private void toggleTheme() {
+        // Verificar si el modo oscuro está activado
+        boolean isDarkMode = darkMode.isSelected();
+        // Aplicar el tema en base a la selección
+        applyTheme(isDarkMode);
     }
-    // Si existe listF, aplicar el modo oscuro también allí
-    if (listF != null) {
-        listF.applyDarkMode(darkMode.isSelected());
-    }
-}
 
-   private ImageIcon resizeIcon(String path, int width, int height) {
-    ImageIcon icon = new ImageIcon(getClass().getResource(path));
-    Image image = icon.getImage();
-    Image newImage = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
-    return new ImageIcon(newImage);
-}
+    public void applyTheme(boolean isDarkMode) {
+        if (isDarkMode) {
+            // Aplicar modo oscuro a todos los paneles
+            ThemeManager.applyDarkMode(jPanelMain);
+            // Aplicar modo oscuro a otros componentes
+            ThemeManager.applyDarkModeToComponents(jlogo, IraDialogo, jMenuFile, jMenuExit, logout, jMenuHelp, jMenuItem1, jMenuWeb);
+        } else {
+            // Aplicar modo claro a todos los paneles
+            ThemeManager.applyLightMode(jPanelMain);
+            // Aplicar modo claro a otros componentes
+            ThemeManager.applyLightModeToComponents(jlogo, IraDialogo, jMenuFile, jMenuExit, logout, jMenuHelp, jMenuItem1, jMenuWeb);
+        }
+    }
 
     public boolean isDarkModeEnabled() {
-    return darkMode.isSelected();
-}
+        // Retornar si el checkbox de modo oscuro está seleccionado
+        return darkMode.isSelected();
+    }
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String [] args) {
-    java.awt.EventQueue.invokeLater(new Runnable() {
-        public void run() {
-            new Main().setVisible(true);
-        }
-    });
-}
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Main().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton IraDialogo;

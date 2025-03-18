@@ -4,6 +4,7 @@
  */
 package mosqueira.trackfit.views;
 
+import java.awt.Font;
 import java.awt.Frame;
 
 import java.util.List;
@@ -32,7 +33,9 @@ public class DialogModificarExercise extends javax.swing.JDialog {
         listExercicis = da.getInfoExercise();
         setLocationRelativeTo(parent);
         loadExercisesIntoComboBox();
+        applyStyles();
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -114,6 +117,29 @@ public class DialogModificarExercise extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void applyStyles() {
+        // Establecemos un esquema de colores consistentes para los componentes
+        jDesktopModificar.setBackground(new java.awt.Color(240, 240, 240));  // Fondo de la ventana
+
+        jNomExerciciModificar.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
+        jNomExerciciModificar.setForeground(new java.awt.Color(0, 51, 102));  // Color para las etiquetas
+
+        jDescripcioExercicisModificar.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
+        jDescripcioExercicisModificar.setForeground(new java.awt.Color(0, 51, 102));  // Color para las etiquetas
+
+        jTextNomExerciciModificar.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
+        jTextNomExerciciModificar.setBackground(new java.awt.Color(255, 255, 255));  // Fondo blanco para el campo de texto
+
+        jTextDescripcioModificar.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
+        jTextDescripcioModificar.setBackground(new java.awt.Color(255, 255, 255));  // Fondo blanco para el campo de texto
+
+        // Botones con colores personalizados
+        jButtonAddModificado.setBackground(new java.awt.Color(0, 153, 76));
+        jButtonAddModificado.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonCancelModificacion.setBackground(new java.awt.Color(255, 51, 51));
+        jButtonCancelModificacion.setForeground(new java.awt.Color(255, 255, 255));
+    }
+
     private void loadExercisesIntoComboBox() {
         // Cargar los ejercicios en el comboBox solo una vez
         if (listExercicis != null && !listExercicis.isEmpty()) {
@@ -127,13 +153,22 @@ public class DialogModificarExercise extends javax.swing.JDialog {
         }
     }
     private void jButtonAddModificadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddModificadoActionPerformed
-       try {
-            String newName = jTextNomExerciciModificar.getText();
-            String newDescripcio = jTextDescripcioModificar.getText();
-            int id = exercici.getId(); 
+        try {
+            String newName = jTextNomExerciciModificar.getText().trim();
+            String newDescripcio = jTextDescripcioModificar.getText().trim();
+
+            if (newName.isEmpty() || newDescripcio.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Both fields must be filled.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int id = exercici.getId();
             da.getUpdateExercici(id, newName, newDescripcio);
 
-            // Mensaje de éxito
+            // Actualizar ComboBox
+            listExercicis = da.getInfoExercise();  // Actualiza la lista de ejercicios
+            loadExercisesIntoComboBox();  // Recarga el ComboBox con los ejercicios actualizados
+
             JOptionPane.showMessageDialog(this, "Exercise successfully modified.");
             dispose();
         } catch (Exception e) {
@@ -142,11 +177,28 @@ public class DialogModificarExercise extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonAddModificadoActionPerformed
 
     private void jButtonCancelModificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelModificacionActionPerformed
-        dispose();
+        try {
+            String newName = jTextNomExerciciModificar.getText().trim();
+            String newDescripcio = jTextDescripcioModificar.getText().trim();
+
+            if (newName.isEmpty() || newDescripcio.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Both fields must be filled.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int id = exercici.getId();
+            da.getUpdateExercici(id, newName, newDescripcio);
+
+            JOptionPane.showMessageDialog(this, "Exercise successfully modified.");
+            dispose();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
     }//GEN-LAST:event_jButtonCancelModificacionActionPerformed
 
     private void jComboExercicisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboExercicisActionPerformed
-    // Cuando el usuario selecciona un ejercicio, actualiza los campos de texto
+        // Cuando el usuario selecciona un ejercicio, actualiza los campos de texto
         int selectItem = jComboExercicis.getSelectedIndex();
         if (selectItem >= 0) {
             exercici = listExercicis.get(selectItem);

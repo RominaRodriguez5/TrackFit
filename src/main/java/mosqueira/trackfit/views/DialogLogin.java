@@ -1,12 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package mosqueira.trackfit.views;
-
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import java.awt.Image;
-import javax.swing.ImageIcon;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JOptionPane;
 import mosqueira.trackfit.Main;
@@ -23,6 +19,8 @@ public class DialogLogin extends javax.swing.JDialog {
     private DataAccess da = new DataAccess();
     private Usuaris loggedInUser;
     private JCheckBoxMenuItem darkMode;
+    private static final Logger logger = Logger.getLogger(DialogLogin.class.getName());
+    JCheckBox showPasswordCheckBox = new JCheckBox("Mostrar contraseña");
 
     /**
      * Creates new form NewJDialog
@@ -33,46 +31,52 @@ public class DialogLogin extends javax.swing.JDialog {
         this.mainFra = (Main) parent;
         setLocationRelativeTo(this);
         addIcons();
+        jPanel1.add(showPasswordCheckBox);
+        showPasswordCheckBox.setBounds(290, 360, 180, 20);
+        showPasswordCheckBox.setFont(new java.awt.Font("SansSerif", 3, 14));
+        showPasswordCheckBox.addActionListener(e -> {
+            if (showPasswordCheckBox.isSelected()) {
+                txtPassword.setEchoChar((char) 0); // Muestra la contraseña
+            } else {
+                txtPassword.setEchoChar('*'); // Oculta la contraseña
+            }
+        });
     }
 
     // Añade iconos a los elementos visuales
     private void addIcons() {
-        Email.setIcon(resizeIcon("/images/email_icon.png", 50, 50));
-        Password.setIcon(resizeIcon("/images/password_icon.png", 50, 50));
-        botonAcceso.setIcon(resizeIcon("/images/login_icon.png", 80, 80));
-        jMenufile.setIcon(resizeIcon("/images/file_icon.png", 16, 16));
-        jMenuReturn.setIcon(resizeIcon("/images/return_icon.png", 16, 16));
-        jMenuEdit.setIcon(resizeIcon("/images/edit_icon.png", 16, 16));
+        Email.setIcon(ThemeManager.resizeIcon("/images/email_icon.png", 50, 50));
+        Password.setIcon(ThemeManager.resizeIcon("/images/password_icon.png", 50, 50));
+        botonAcceso.setIcon(ThemeManager.resizeIcon("/images/login_icon.png", 80, 80));
+        jMenufile.setIcon(ThemeManager.resizeIcon("/images/file_icon.png", 16, 16));
+        jMenuReturn.setIcon(ThemeManager.resizeIcon("/images/return_icon.png", 16, 16));
+        jMenuEdit.setIcon(ThemeManager.resizeIcon("/images/edit_icon.png", 16, 16));
 
         // Inicializar el checkbox "Modo oscuro"
         darkMode = new JCheckBoxMenuItem("Modo oscuro");
         darkMode.setState(
-                false); // Inicialmente desactivado
+                false); 
         darkMode.addActionListener(e
                 -> {
-            boolean isDarkMode = darkMode.getState(); 
-            applyDarkMode(isDarkMode); 
+            boolean isDarkMode = darkMode.getState();
+            applyDarkMode(isDarkMode);
         }
         );
 
         jMenuEdit.add(darkMode);
     }
 
-    private void applyDarkMode(boolean isDarkMode) {
+    public void applyDarkMode(boolean isDarkMode) {
         if (isDarkMode) {
-            // Cambia el fondo y los colores al tema oscuro
-            jPanel1.setBackground(java.awt.Color.DARK_GRAY);
-            txtEmail.setBackground(java.awt.Color.GRAY);
-            txtPassword.setBackground(java.awt.Color.GRAY);
-            txtEmail.setForeground(java.awt.Color.WHITE);
-            txtPassword.setForeground(java.awt.Color.WHITE);
+            
+            ThemeManager.applyDarkMode(jPanel1);
+            ThemeManager.applyDarkModeToComponents(txtEmail, txtPassword,showPasswordCheckBox);
+            
         } else {
-            // Restaura el fondo y los colores al tema claro
-            jPanel1.setBackground(java.awt.Color.WHITE);
-            txtEmail.setBackground(java.awt.Color.WHITE);
-            txtPassword.setBackground(java.awt.Color.WHITE);
-            txtEmail.setForeground(java.awt.Color.BLACK);
-            txtPassword.setForeground(java.awt.Color.BLACK);
+            ThemeManager.applyLightMode(jPanel1);
+            ThemeManager.applyLightModeToComponents(txtEmail, txtPassword,showPasswordCheckBox);
+            
+            
         }
         jPanel1.repaint(); // Refresca la interfaz
     }
@@ -143,6 +147,7 @@ public class DialogLogin extends javax.swing.JDialog {
         jPanel1.add(Password);
         Password.setBounds(160, 320, 70, 50);
 
+        txtPassword.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtPassword.setText("string");
         txtPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -150,7 +155,7 @@ public class DialogLogin extends javax.swing.JDialog {
             }
         });
         jPanel1.add(txtPassword);
-        txtPassword.setBounds(290, 330, 100, 22);
+        txtPassword.setBounds(290, 330, 100, 26);
 
         Email.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         Email.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/email_icon.png"))); // NOI18N
@@ -158,6 +163,7 @@ public class DialogLogin extends javax.swing.JDialog {
         jPanel1.add(Email);
         Email.setBounds(150, 230, 80, 60);
 
+        txtEmail.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtEmail.setText("a@b.c");
         txtEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -165,7 +171,7 @@ public class DialogLogin extends javax.swing.JDialog {
             }
         });
         jPanel1.add(txtEmail);
-        txtEmail.setBounds(290, 250, 100, 22);
+        txtEmail.setBounds(290, 250, 100, 26);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logo.png"))); // NOI18N
         jLabel1.setText("jLabel1");
@@ -211,31 +217,51 @@ public class DialogLogin extends javax.swing.JDialog {
     }//GEN-LAST:event_txtPasswordActionPerformed
 
     private void botonAccesoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAccesoActionPerformed
-        try {
-            // Obtiene el usuario desde el acceso de datos usando el email ingresado
-            Usuaris usuari = da.getUser(txtEmail.getText());
-            if (usuari != null && usuari.isInstructor()) {
-                // Comprobar contraseña
-                char[] passwordToVerify = txtPassword.getPassword();
-                String userPasswordHashDataBase = usuari.getPasswordHash();
-                var result = BCrypt.verifyer().verify(passwordToVerify, userPasswordHashDataBase);
-                if (result.verified) {
-                    loggedInUser = usuari;
-                    // Si la verificación es correcta
-                    JOptionPane.showMessageDialog(this, "Login successful. Welcome " + usuari.getNom());
-                    mainFra.showListFrame(loggedInUser);
-                    dispose();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Error: Invalid password");
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Error: User not found or not an instructor");
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error Access: " + e.getMessage());
-        }
+        loginUser();
     }//GEN-LAST:event_botonAccesoActionPerformed
+    private void loginUser() {
+        // Obtenemos el email ingresado por el usuario
+        String email = txtEmail.getText();
+        char[] password = txtPassword.getPassword();
+        txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.BLACK));
+        txtPassword.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.BLACK));
+        try {
+            // 1. Obtener el usuario desde la base de datos usando el email ingresado
+            Usuaris usuario = da.getUser(email);
 
+            // 2. Comprobar si el usuario existe
+            if (usuario == null) {
+                JOptionPane.showMessageDialog(this, "Error: Usuario no encontrado.");
+                txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.ORANGE));
+                return; // Salir del método si no se encuentra el usuario
+            }
+
+            // 3. Comprobar si el usuario es un instructor
+            if (!usuario.isInstructor()) {
+                JOptionPane.showMessageDialog(this, "Error: El usuario no es un instructor.");
+                txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.ORANGE));
+                return; // Salir del método si el usuario no es instructor
+            }
+
+            // 4. Verificar la contraseña utilizando BCrypt
+            String hashPasswordDB = usuario.getPasswordHash();
+            var result = BCrypt.verifyer().verify(password, hashPasswordDB);
+
+            if (result.verified) {
+                loggedInUser = usuario;
+                mainFra.showListFrame(loggedInUser);
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Error: Contraseña incorrecta.");
+                // Resaltar campo de contraseña
+                txtPassword.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED));
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Hubo un error al intentar iniciar sesión. Por favor, inténtalo de nuevo más tarde.");
+            logger.log(Level.SEVERE, "Error al acceder: ", e);
+        }
+    }
     private void jMenufileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenufileActionPerformed
         jMenuEdit.add(darkMode);
     }//GEN-LAST:event_jMenufileActionPerformed
@@ -247,12 +273,6 @@ public class DialogLogin extends javax.swing.JDialog {
     private void jMenuReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuReturnActionPerformed
         setVisible(false);
     }//GEN-LAST:event_jMenuReturnActionPerformed
-    private ImageIcon resizeIcon(String path, int width, int height) {
-        ImageIcon icon = new ImageIcon(getClass().getResource(path));
-        Image image = icon.getImage();
-        Image newImage = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
-        return new ImageIcon(newImage);
-    }
 
     /**
      * @param args the command line arguments

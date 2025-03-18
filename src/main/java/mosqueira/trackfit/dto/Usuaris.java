@@ -58,14 +58,6 @@ public class Usuaris {
         this.PasswordHash = PasswordHash;
     }
 
-    public byte[] getFoto() {
-        return Foto;
-    }
-
-    public void setFoto(byte[] Foto) {
-        this.Foto = Foto;
-    }
-
     public boolean isInstructor() {
         return Instructor;
     }
@@ -78,7 +70,6 @@ public class Usuaris {
     private String Nom;
     private String Email;
     private String PasswordHash;
-    private byte[] Foto;
     private boolean Instructor;
     private int AssignedInstructor;
 }
