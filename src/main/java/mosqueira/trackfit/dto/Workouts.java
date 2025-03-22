@@ -1,6 +1,10 @@
 
 package mosqueira.trackfit.dto;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 /**
  *
@@ -13,7 +17,19 @@ public class Workouts {
      * @return the forDate
      */
     public String getForDate() {
-        return forDate;
+        if (forDate == null || forDate.isEmpty()) {
+            return "";
+        }
+
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        try {
+            Date date = inputDateFormat.parse(forDate);
+            return outputDateFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return forDate;
+        }
     }
 
     /**

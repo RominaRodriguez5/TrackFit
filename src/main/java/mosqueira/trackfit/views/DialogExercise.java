@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package mosqueira.trackfit.views;
+import java.awt.Font;
 import java.awt.Frame;
 import javax.swing.JOptionPane;
 import mosqueira.trackfit.dataAccess.DataAccess;
@@ -18,8 +19,35 @@ public class DialogExercise extends javax.swing.JDialog {
     public DialogExercise(Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        setLocationRelativeTo(this);
+        setLocationRelativeTo(parent);
+        applyStyles(); 
     }
+ private void applyStyles() {
+    // Establecemos un esquema de colores consistentes para los componentes
+    jDesktopVisualExercicis.setBackground(new java.awt.Color(240, 240, 240));  // Fondo de la ventana
+
+    // Estilo para las etiquetas
+    jNombreExercicis.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));  // Etiqueta en negrita
+    jNombreExercicis.setForeground(new java.awt.Color(0, 51, 102));  // Color para las etiquetas
+
+    jDescripcioExercicis.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));  // Etiqueta en negrita
+    jDescripcioExercicis.setForeground(new java.awt.Color(0, 51, 102));  // Color para las etiquetas
+
+    // Estilo para los campos de texto
+    jTextNombreExercici.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
+    jTextNombreExercici.setBackground(new java.awt.Color(255, 255, 255));  // Fondo blanco para el campo de texto
+
+    jTextDescripcio.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
+    jTextDescripcio.setBackground(new java.awt.Color(255, 255, 255));  // Fondo blanco para el campo de texto
+
+    // Estilo para los botones
+    jButtonGuardarExercicis.setBackground(new java.awt.Color(0, 153, 76));  // Verde para el botón de guardar
+    jButtonGuardarExercicis.setForeground(new java.awt.Color(255, 255, 255));  // Texto en blanco
+
+    jButtonCancelExercici.setBackground(new java.awt.Color(255, 51, 51));  // Rojo para el botón de cancelar
+    jButtonCancelExercici.setForeground(new java.awt.Color(255, 255, 255));  // Texto en blanco
+}  
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -34,15 +62,17 @@ public class DialogExercise extends javax.swing.JDialog {
         jDescripcioExercicis = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(497, 400));
+
+        jDesktopVisualExercicis.setPreferredSize(new java.awt.Dimension(497, 400));
 
         jButtonGuardarExercicis.setText("Add");
+        jButtonGuardarExercicis.setPreferredSize(new java.awt.Dimension(497, 400));
         jButtonGuardarExercicis.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonGuardarExercicisActionPerformed(evt);
             }
         });
-        jDesktopVisualExercicis.add(jButtonGuardarExercicis);
-        jButtonGuardarExercicis.setBounds(70, 220, 100, 23);
 
         jButtonCancelExercici.setText("Cancel");
         jButtonCancelExercici.addActionListener(new java.awt.event.ActionListener() {
@@ -50,33 +80,71 @@ public class DialogExercise extends javax.swing.JDialog {
                 jButtonCancelExerciciActionPerformed(evt);
             }
         });
-        jDesktopVisualExercicis.add(jButtonCancelExercici);
-        jButtonCancelExercici.setBounds(230, 220, 90, 23);
 
         jNombreExercicis.setBackground(new java.awt.Color(255, 255, 153));
         jNombreExercicis.setFont(new java.awt.Font("SansSerif", 2, 12)); // NOI18N
         jNombreExercicis.setText("Name Exercicis");
-        jDesktopVisualExercicis.add(jNombreExercicis);
-        jNombreExercicis.setBounds(30, 70, 100, 30);
-        jDesktopVisualExercicis.add(jTextNombreExercici);
-        jTextNombreExercici.setBounds(150, 70, 180, 30);
-        jDesktopVisualExercicis.add(jTextDescripcio);
-        jTextDescripcio.setBounds(150, 140, 180, 30);
 
         jDescripcioExercicis.setFont(new java.awt.Font("SansSerif", 2, 12)); // NOI18N
         jDescripcioExercicis.setText("Description");
-        jDesktopVisualExercicis.add(jDescripcioExercicis);
-        jDescripcioExercicis.setBounds(30, 140, 110, 30);
+
+        jDesktopVisualExercicis.setLayer(jButtonGuardarExercicis, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopVisualExercicis.setLayer(jButtonCancelExercici, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopVisualExercicis.setLayer(jNombreExercicis, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopVisualExercicis.setLayer(jTextNombreExercici, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopVisualExercicis.setLayer(jTextDescripcio, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopVisualExercicis.setLayer(jDescripcioExercicis, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jDesktopVisualExercicisLayout = new javax.swing.GroupLayout(jDesktopVisualExercicis);
+        jDesktopVisualExercicis.setLayout(jDesktopVisualExercicisLayout);
+        jDesktopVisualExercicisLayout.setHorizontalGroup(
+            jDesktopVisualExercicisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDesktopVisualExercicisLayout.createSequentialGroup()
+                .addGroup(jDesktopVisualExercicisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jDesktopVisualExercicisLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jNombreExercicis, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addComponent(jTextNombreExercici, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jDesktopVisualExercicisLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jDescripcioExercicis, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jTextDescripcio, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jDesktopVisualExercicisLayout.createSequentialGroup()
+                        .addGap(108, 108, 108)
+                        .addComponent(jButtonGuardarExercicis, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(72, 72, 72)
+                        .addComponent(jButtonCancelExercici, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(127, Short.MAX_VALUE))
+        );
+        jDesktopVisualExercicisLayout.setVerticalGroup(
+            jDesktopVisualExercicisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDesktopVisualExercicisLayout.createSequentialGroup()
+                .addGap(70, 70, 70)
+                .addGroup(jDesktopVisualExercicisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jNombreExercicis, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextNombreExercici, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(40, 40, 40)
+                .addGroup(jDesktopVisualExercicisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jDescripcioExercicis, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextDescripcio, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(50, 50, 50)
+                .addGroup(jDesktopVisualExercicisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonGuardarExercicis, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonCancelExercici, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(157, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopVisualExercicis, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
+            .addComponent(jDesktopVisualExercicis, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopVisualExercicis, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+            .addComponent(jDesktopVisualExercicis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();

@@ -1,5 +1,7 @@
 package mosqueira.trackfit.views;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -9,46 +11,21 @@ import mosqueira.trackfit.dataAccess.DataAccess;
 import mosqueira.trackfit.dto.*;
 import net.miginfocom.swing.MigLayout;
 
-/**
- *
- * @author Lulas
- */
 public class PanelUsuariosAsignados extends javax.swing.JPanel {
+
     private final Main mainFra;
     private final Usuaris instructor;
     private Usuaris usuarioSeleccionado;
     private final DataAccess da = new DataAccess();
     private List<Usuaris> listUsers;
     private List<Exercicis> listExercise;
-    
 
-    /**
-     * Creates new form ListPanel
-     *
-     * @param jFrameMain
-     * @param instructor
-     * @param isDarkMode
-     */
     public PanelUsuariosAsignados(Main jFrameMain, Usuaris instructor, boolean isDarkMode) {
         this.instructor = instructor;
         this.mainFra = jFrameMain;
-       setPreferredSize(new Dimension(200, 200));
         initializeComponents();
         initializeListeners();
-        applyDarkMode(isDarkMode);
-
-    }
-     private void PanelPrincipal() {
-        setLayout(new MigLayout("wrap 1, fill", "[grow]", "[grow][grow]") );
-        // Panel superior con sesión del instructor y calendario
-        jSesionInstructor = new JPanel(new MigLayout("fill", "[grow 80][grow 20]", "[grow]"));
-     
-        // Panel contenedor para ejercicios y calendario
-        JPanel panelInferior = new JPanel(new MigLayout("fill", "[grow ][grow ]", "[grow]"));
-        panelInferior.add(jPanelExercicis, "grow");
-        panelInferior.add(jPanelCalendar, "grow");
-
-        add(panelInferior, "grow");
+        applyDarkMode(jFrameMain.isDarkModeEnabled()); 
     }
 
     private void initializeComponents() {
@@ -62,12 +39,146 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
 
     private void initializeListeners() {
         componenteCalendar1.addTrainingEventListener((List<TrainingData> trainings) -> {
-            DefaultListModel<String> listModel = new DefaultListModel<>();
-            for (TrainingData training : trainings) {
-                listModel.addElement(training.toString());
+            if (trainings.isEmpty()) {
+                JOptionPane.showMessageDialog(jPanelCalendar, "No workouts available.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                return;
             }
-            JOptionPane.showMessageDialog(jPanelCalendar, listModel);
+
+            // Crear un StringBuilder para almacenar la información de los entrenamientos
+            StringBuilder trainingInfo = new StringBuilder();
+
+            for (TrainingData training : trainings) {
+                trainingInfo.append("Usuario: ").append(training.getUserName()).append("\n")
+                        .append("Comentarios: ").append(training.getComment()).append("\n")
+                        .append("Número de Ejercicios: ").append(training.getNumberOfExercises()).append("\n")
+                        .append("Workouts ID: ").append(training.getWorkoutId()).append("\n")
+                        .append("-------------------------------------------------\n");
+            }
+
+            // Crear un JTextArea para mostrar la información
+            JTextArea textArea = new JTextArea(trainingInfo.toString());
+            textArea.setEditable(false); // Hacer que el texto no sea editable
+            textArea.setWrapStyleWord(true);
+            textArea.setLineWrap(true);
+            textArea.setFont(new Font("Arial", Font.PLAIN, 14)); // Ajustar la fuente
+            textArea.setMargin(new Insets(5, 5, 5, 5));
+
+            // Agregar el JTextArea a un JScrollPane para manejar contenido largo
+            JScrollPane scrollPane = new JScrollPane(textArea);
+            scrollPane.setPreferredSize(new Dimension(200, 200));
+
+            // Mostrar en un JOptionPane
+            JOptionPane.showMessageDialog(jPanelCalendar, scrollPane, "Workout Details", JOptionPane.INFORMATION_MESSAGE);
         });
+    }
+
+    private void PanelPrincipal() {
+        // Definir el layout principal
+        setLayout(new MigLayout("wrap 1, fill", "[grow]", "[grow][grow]"));
+
+        // PANEL SUPERIOR (jSesionInstructor)
+        setupSesionInstructorPanel();
+
+        // PANEL INFERIOR
+        JPanel panelInferior = createInferiorPanel();
+
+        // Agregar los paneles al `PanelPrincipal`
+        add(jSesionInstructor, "growx, pushx, wrap");
+        add(panelInferior, "grow, push");
+
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                revalidate();
+                repaint();
+            }
+        });
+    }
+
+    private void setupSesionInstructorPanel() {
+        jSesionInstructor.setLayout(new MigLayout("fill", "[grow 50][grow 50]", "[][grow]"));
+        jSesionInstructor.add(userComboBox, "span 2, growx, wrap");
+
+        Box buttonBox = createButtonBox();
+        jSesionInstructor.add(buttonBox, "span 2, wrap");
+
+        jSesionInstructor.add(jScrollWorkoutsTable, "grow, push");
+        jSesionInstructor.add(jScrollExerciseList, "grow, push");
+    }
+
+    private Box createButtonBox() {
+        Box buttonBox = Box.createHorizontalBox();
+        buttonBox.add(addWorkoutsButton);
+        buttonBox.add(Box.createHorizontalStrut(30));
+        buttonBox.add(addExerciseToWorkoutButton);
+        return buttonBox;
+    }
+
+    private JPanel createInferiorPanel() {
+        JPanel panelInferior = new JPanel(new MigLayout("fill", "[grow][grow]", "[grow]"));
+        panelInferior.add(createEjerciciosPanel(), "grow, push");
+        panelInferior.add(jPanelCalendar, "grow, push");
+        return panelInferior;
+    }
+
+    private JPanel createEjerciciosPanel() {
+        jPanelExercicis.setLayout(new MigLayout("fill", "[grow]", "[][][grow]"));
+        jPanelExercicis.add(createButtonBox2(), "wrap");
+        jPanelExercicis.add(jScrollTableExercise, "span, grow, push");
+        return jPanelExercicis;
+    }
+
+    private Box createButtonBox2() {
+        Box buttonBox2 = Box.createHorizontalBox();
+        buttonBox2.add(showExerciseButton);
+        buttonBox2.add(Box.createHorizontalStrut(30));
+        buttonBox2.add(addExerciseButton);
+        buttonBox2.add(Box.createHorizontalStrut(30));
+        buttonBox2.add(deleteExerciseButton);
+        buttonBox2.add(Box.createHorizontalStrut(30));
+        buttonBox2.add(editExerciseButton);
+        return buttonBox2;
+    }
+
+    private void asignarIconosABotones() {
+        addWorkoutsButton.setIcon(ThemeManager.resizeIcon("/images/path_to_icon.png", 60, 60));
+        showExerciseButton.setIcon(ThemeManager.resizeIcon("/images/show_exercise_icon.png", 60, 60));
+        addExerciseButton.setIcon(ThemeManager.resizeIcon("/images/add_exercise_icon.png",  60, 60));
+        editExerciseButton.setIcon(ThemeManager.resizeIcon("/images/edit_exercise_icon.png",  60, 60));
+        deleteExerciseButton.setIcon(ThemeManager.resizeIcon("/images/delete_exercise_icon.png",  60, 60));
+        addExerciseToWorkoutButton.setIcon(ThemeManager.resizeIcon("/images/add_exercise_to_workout_icon.png",  60, 60));
+    }
+
+    public void applyDarkMode(boolean isDarkMode) {
+        if (isDarkMode) {
+            applyDarkModeStyles();
+        } else {
+            applyLightModeStyles();
+        }
+        revalidate();
+        repaint();
+    }
+
+    private void applyDarkModeStyles() {
+        ThemeManager.applyDarkMode(this, jPanelCalendar, jSesionInstructor, jPanelExercicis);
+        ThemeManager.applyDarkModeToTablesAndLists(
+                new JTable[]{workoutsTable, exercisesTable},
+                new JList<?>[]{exerciseList}
+        );
+        ThemeManager.applyDarkModeToComponents(addWorkoutsButton, addExerciseToWorkoutButton,
+                addExerciseButton, deleteExerciseButton, editExerciseButton, showExerciseButton,
+                jScrollExerciseList, jScrollWorkoutsTable, jScrollTableExercise, userComboBox);
+    }
+
+    private void applyLightModeStyles() {
+        ThemeManager.applyLightMode(this, jPanelCalendar, jSesionInstructor, jPanelExercicis);
+        ThemeManager.applyDarkModeToTablesAndLists(
+                new JTable[]{workoutsTable, exercisesTable},
+                new JList<?>[]{exerciseList}
+        );
+        ThemeManager.applyLightModeToComponents(addWorkoutsButton, addExerciseToWorkoutButton,
+                addExerciseButton, deleteExerciseButton, editExerciseButton, showExerciseButton,
+                jScrollExerciseList, jScrollWorkoutsTable, jScrollTableExercise, userComboBox);
     }
 
     @SuppressWarnings("unchecked")
@@ -82,9 +193,6 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         addExerciseToWorkoutButton = new javax.swing.JButton();
         jScrollExerciseList = new javax.swing.JScrollPane();
         exerciseList = new javax.swing.JList<>();
-        jLabel1 = new javax.swing.JLabel();
-        jPanelCalendar = new javax.swing.JPanel();
-        componenteCalendar1 = new mosqueira.componentecalendar.ComponenteCalendar();
         jPanelExercicis = new javax.swing.JPanel();
         showExerciseButton = new javax.swing.JButton();
         jScrollTableExercise = new javax.swing.JScrollPane();
@@ -92,18 +200,24 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         addExerciseButton = new javax.swing.JButton();
         deleteExerciseButton = new javax.swing.JButton();
         editExerciseButton = new javax.swing.JButton();
+        jPanelCalendar = new javax.swing.JPanel();
+        componenteCalendar1 = new mosqueira.componentecalendar.ComponenteCalendar();
 
-        setBackground(new java.awt.Color(249, 249, 231));
+        setBackground(new java.awt.Color(204, 204, 204));
+        setForeground(new java.awt.Color(204, 204, 204));
+        setMinimumSize(new java.awt.Dimension(900, 900));
+        setPreferredSize(new java.awt.Dimension(1200, 900));
 
-        jSesionInstructor.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Sesion Instructor", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SimSun", 0, 36), new java.awt.Color(0, 0, 0))); // NOI18N
-        jSesionInstructor.setForeground(new java.awt.Color(51, 51, 51));
-        jSesionInstructor.setPreferredSize(new java.awt.Dimension(1254, 800));
+        jSesionInstructor.setBackground(new java.awt.Color(204, 204, 204));
+        jSesionInstructor.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Users assigned to the Instructor", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
+        jSesionInstructor.setForeground(new java.awt.Color(30, 58, 95));
+        jSesionInstructor.setPreferredSize(new java.awt.Dimension(400, 400));
 
         userComboBox.setBackground(new java.awt.Color(153, 153, 153));
+        userComboBox.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         userComboBox.setForeground(new java.awt.Color(0, 0, 0));
         userComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         userComboBox.setActionCommand("");
-        userComboBox.setPreferredSize(null);
         userComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 userComboBoxActionPerformed(evt);
@@ -111,6 +225,7 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         });
 
         workoutsTable.setBackground(new java.awt.Color(153, 153, 153));
+        workoutsTable.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         workoutsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
@@ -121,7 +236,10 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3"
             }
         ));
+        workoutsTable.setAlignmentX(1.5F);
+        workoutsTable.setAlignmentY(1.5F);
         workoutsTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        workoutsTable.setSelectionForeground(new java.awt.Color(255, 255, 204));
         workoutsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         workoutsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -130,7 +248,7 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         });
         jScrollWorkoutsTable.setViewportView(workoutsTable);
 
-        addWorkoutsButton.setFont(new java.awt.Font("Sylfaen", 0, 12)); // NOI18N
+        addWorkoutsButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         addWorkoutsButton.setToolTipText("New Workouts");
         addWorkoutsButton.setBorder(null);
         addWorkoutsButton.setContentAreaFilled(false);
@@ -142,6 +260,7 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
             }
         });
 
+        addExerciseToWorkoutButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         addExerciseToWorkoutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add_exercise_to_workout_icon.png"))); // NOI18N
         addExerciseToWorkoutButton.setToolTipText("Add Exercise  to  Workouts");
         addExerciseToWorkoutButton.setBorder(null);
@@ -153,90 +272,51 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
             }
         });
 
-        exerciseList.setBackground(new java.awt.Color(249, 249, 231));
+        exerciseList.setBackground(new java.awt.Color(204, 204, 204));
         exerciseList.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        exerciseList.setForeground(new java.awt.Color(0, 0, 0));
-        exerciseList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Exercise List" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        exerciseList.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        exerciseList.setForeground(new java.awt.Color(30, 58, 95));
         jScrollExerciseList.setViewportView(exerciseList);
-
-        jLabel1.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel1.setFont(new java.awt.Font("SimSun", 1, 24)); // NOI18N
-        jLabel1.setText("List Exercise");
 
         javax.swing.GroupLayout jSesionInstructorLayout = new javax.swing.GroupLayout(jSesionInstructor);
         jSesionInstructor.setLayout(jSesionInstructorLayout);
         jSesionInstructorLayout.setHorizontalGroup(
             jSesionInstructorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jSesionInstructorLayout.createSequentialGroup()
-                .addGroup(jSesionInstructorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jSesionInstructorLayout.createSequentialGroup()
+                .addComponent(userComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(108, 108, 108)
+                .addGroup(jSesionInstructorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jSesionInstructorLayout.createSequentialGroup()
-                        .addGap(86, 86, 86)
-                        .addComponent(addWorkoutsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(362, 362, 362)
+                        .addComponent(addWorkoutsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(addExerciseToWorkoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jSesionInstructorLayout.createSequentialGroup()
-                        .addGap(300, 300, 300)
-                        .addComponent(userComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jSesionInstructorLayout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(jScrollWorkoutsTable, javax.swing.GroupLayout.PREFERRED_SIZE, 746, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE)
-                .addGroup(jSesionInstructorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollExerciseList, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(102, 102, 102))
+                    .addComponent(jScrollWorkoutsTable, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(176, 176, 176)
+                .addComponent(jScrollExerciseList, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(52, Short.MAX_VALUE))
         );
         jSesionInstructorLayout.setVerticalGroup(
             jSesionInstructorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jSesionInstructorLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(63, 63, 63)
                 .addGroup(jSesionInstructorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(userComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jSesionInstructorLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(userComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollWorkoutsTable, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollWorkoutsTable, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jSesionInstructorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(addExerciseToWorkoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(addWorkoutsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jSesionInstructorLayout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(jScrollExerciseList, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jSesionInstructorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(addWorkoutsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(addExerciseToWorkoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollExerciseList, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
 
-        jPanelCalendar.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Calendar", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SimSun", 0, 24), new java.awt.Color(0, 0, 0))); // NOI18N
+        jPanelExercicis.setBackground(new java.awt.Color(204, 204, 204));
+        jPanelExercicis.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Exercise", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanelExercicis.setForeground(new java.awt.Color(30, 58, 95));
+        jPanelExercicis.setPreferredSize(new java.awt.Dimension(500, 355));
 
-        componenteCalendar1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 204, 153)));
-        componenteCalendar1.setActiveButtonColor(new java.awt.Color(0, 0, 0));
-
-        javax.swing.GroupLayout jPanelCalendarLayout = new javax.swing.GroupLayout(jPanelCalendar);
-        jPanelCalendar.setLayout(jPanelCalendarLayout);
-        jPanelCalendarLayout.setHorizontalGroup(
-            jPanelCalendarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCalendarLayout.createSequentialGroup()
-                .addContainerGap(55, Short.MAX_VALUE)
-                .addComponent(componenteCalendar1, javax.swing.GroupLayout.PREFERRED_SIZE, 507, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29))
-        );
-        jPanelCalendarLayout.setVerticalGroup(
-            jPanelCalendarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelCalendarLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(componenteCalendar1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
-        );
-
-        jPanelExercicis.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Exercise", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SimSun", 0, 24), new java.awt.Color(0, 0, 0))); // NOI18N
-        jPanelExercicis.setForeground(new java.awt.Color(0, 0, 0));
-
+        showExerciseButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         showExerciseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/show_exercise_icon.png"))); // NOI18N
         showExerciseButton.setToolTipText("Show Exercise");
         showExerciseButton.setBorder(javax.swing.BorderFactory.createCompoundBorder(null, javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(255, 102, 51))));
@@ -249,6 +329,7 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         });
 
         exercisesTable.setBackground(new java.awt.Color(153, 153, 153));
+        exercisesTable.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         exercisesTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
@@ -260,6 +341,7 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
                 "Title 1", "Title 2"
             }
         ));
+        exercisesTable.setMinimumSize(new java.awt.Dimension(0, 0));
         exercisesTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 exercisesTableMouseClicked(evt);
@@ -268,6 +350,7 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         jScrollTableExercise.setViewportView(exercisesTable);
 
         addExerciseButton.setBackground(new java.awt.Color(255, 255, 255));
+        addExerciseButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         addExerciseButton.setForeground(new java.awt.Color(0, 0, 0));
         addExerciseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add_exercise_icon.png"))); // NOI18N
         addExerciseButton.setToolTipText("Add New Exercise");
@@ -282,6 +365,7 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         });
 
         deleteExerciseButton.setBackground(new java.awt.Color(255, 255, 255));
+        deleteExerciseButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         deleteExerciseButton.setForeground(new java.awt.Color(0, 0, 0));
         deleteExerciseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delete_exercise_icon.png"))); // NOI18N
         deleteExerciseButton.setToolTipText("Delete");
@@ -296,6 +380,7 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         });
 
         editExerciseButton.setBackground(new java.awt.Color(255, 255, 255));
+        editExerciseButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         editExerciseButton.setForeground(new java.awt.Color(0, 0, 0));
         editExerciseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/edit_exercise_icon.png"))); // NOI18N
         editExerciseButton.setToolTipText("Modify");
@@ -314,31 +399,62 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         jPanelExercicisLayout.setHorizontalGroup(
             jPanelExercicisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelExercicisLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(jPanelExercicisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelExercicisLayout.createSequentialGroup()
-                        .addComponent(showExerciseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(59, 59, 59)
-                        .addComponent(addExerciseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(85, 85, 85)
-                        .addComponent(deleteExerciseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(76, 76, 76)
-                        .addComponent(editExerciseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollTableExercise, javax.swing.GroupLayout.PREFERRED_SIZE, 503, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addGap(8, 8, 8)
+                .addComponent(showExerciseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(60, 60, 60)
+                .addComponent(addExerciseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(60, 60, 60)
+                .addComponent(deleteExerciseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(62, 62, 62)
+                .addComponent(editExerciseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelExercicisLayout.createSequentialGroup()
+                .addContainerGap(38, Short.MAX_VALUE)
+                .addComponent(jScrollTableExercise, javax.swing.GroupLayout.PREFERRED_SIZE, 426, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(39, Short.MAX_VALUE))
         );
         jPanelExercicisLayout.setVerticalGroup(
             jPanelExercicisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelExercicisLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollTableExercise, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollTableExercise, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelExercicisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(deleteExerciseButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(editExerciseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(showExerciseButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                    .addComponent(addExerciseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(65, 65, 65))
+                .addGroup(jPanelExercicisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(addExerciseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanelExercicisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(deleteExerciseButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE)
+                        .addComponent(editExerciseButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(showExerciseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanelCalendar.setBackground(new java.awt.Color(204, 204, 204));
+        jPanelCalendar.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Calendar", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanelCalendar.setForeground(new java.awt.Color(30, 58, 95));
+        jPanelCalendar.setName(""); // NOI18N
+        jPanelCalendar.setPreferredSize(new java.awt.Dimension(600, 350));
+
+        componenteCalendar1.setBackground(new java.awt.Color(204, 204, 204));
+        componenteCalendar1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(30, 58, 95)));
+        componenteCalendar1.setForeground(new java.awt.Color(30, 58, 95));
+        componenteCalendar1.setActiveButtonColor(new java.awt.Color(102, 204, 255));
+        componenteCalendar1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        javax.swing.GroupLayout jPanelCalendarLayout = new javax.swing.GroupLayout(jPanelCalendar);
+        jPanelCalendar.setLayout(jPanelCalendarLayout);
+        jPanelCalendarLayout.setHorizontalGroup(
+            jPanelCalendarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCalendarLayout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(componenteCalendar1, javax.swing.GroupLayout.DEFAULT_SIZE, 596, Short.MAX_VALUE)
+                .addContainerGap(35, Short.MAX_VALUE))
+        );
+        jPanelCalendarLayout.setVerticalGroup(
+            jPanelCalendarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCalendarLayout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(componenteCalendar1, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -346,87 +462,28 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(18, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jSesionInstructor, javax.swing.GroupLayout.PREFERRED_SIZE, 1289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanelExercicis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanelCalendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                .addContainerGap()
+                .addComponent(jPanelExercicis, javax.swing.GroupLayout.PREFERRED_SIZE, 513, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
+                .addComponent(jPanelCalendar, javax.swing.GroupLayout.DEFAULT_SIZE, 672, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jSesionInstructor, javax.swing.GroupLayout.PREFERRED_SIZE, 1226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addComponent(jSesionInstructor, javax.swing.GroupLayout.PREFERRED_SIZE, 434, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jSesionInstructor, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanelCalendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanelExercicis, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
+                    .addComponent(jPanelCalendar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanelExercicis, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
+
+        jPanelCalendar.getAccessibleContext().setAccessibleDescription("");
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * Método para redimensionar imágenes y usarlas como iconos en los botones.
-     *
-     * @param path Ruta del archivo de imagen en el proyecto (ubicado en
-     * /resources).
-     * @param width Ancho deseado del icono.
-     * @param height Alto deseado del icono.
-     * @return ImageIcon redimensionado.
-     */
-
-    /**
-     * Asigna iconos redimensionados a los botones de la interfaz.
-     */
-    private void asignarIconosABotones() {
-        addWorkoutsButton.setIcon(ThemeManager.resizeIcon("/images/path_to_icon.png", 50, 50));
-        showExerciseButton.setIcon(ThemeManager.resizeIcon("/images/show_exercise_icon.png", 30, 30));
-        addExerciseButton.setIcon(ThemeManager.resizeIcon("/images/add_exercise_icon.png", 30, 30));
-        editExerciseButton.setIcon(ThemeManager.resizeIcon("/images/edit_exercise_icon.png", 30, 30));
-        deleteExerciseButton.setIcon(ThemeManager.resizeIcon("/images/delete_exercise_icon.png", 30, 30));
-        addExerciseToWorkoutButton.setIcon(ThemeManager.resizeIcon("/images/add_exercise_to_workout_icon.png", 50, 50));
-    }
-
-    /**
-     * Aplica el modo oscuro o claro a la interfaz y sus componentes.
-     *
-     * @param isDarkMode Indica si se debe activar el modo oscuro (true) o claro
-     * (false).
-     */
-public void applyDarkMode(boolean isDarkMode) {
-    if (isDarkMode) {
-        // Paneles
-        ThemeManager.applyDarkMode(this, jPanelCalendar,jSesionInstructor, jPanelExercicis);
-
-        // Tablas y listas
-        ThemeManager.applyDarkModeToTables(workoutsTable, exercisesTable);
-        ThemeManager.applyDarkModeToLists(exerciseList);
-
-        // Otros componentes
-        ThemeManager.applyDarkModeToComponents(addWorkoutsButton, addExerciseToWorkoutButton,
-            addExerciseButton, deleteExerciseButton, editExerciseButton, showExerciseButton,
-            jScrollExerciseList, jScrollWorkoutsTable, jScrollTableExercise, userComboBox);
-    } else {
-        ThemeManager.applyLightMode(this, jPanelCalendar,jSesionInstructor, jPanelExercicis);
-
-        ThemeManager.applyLightModeToTables(workoutsTable, exercisesTable);
-        ThemeManager.applyLightModeToLists(exerciseList);
-
-        ThemeManager.applyLightModeToComponents(addWorkoutsButton, addExerciseToWorkoutButton,
-            addExerciseButton, deleteExerciseButton, editExerciseButton, showExerciseButton,
-            jScrollExerciseList, jScrollWorkoutsTable, jScrollTableExercise, userComboBox);
-    }
-
-    revalidate();
-    repaint();
-}
-
 
     /**
      * Carga los usuarios asignados a un instructor y los muestra en un combo
@@ -484,7 +541,7 @@ public void applyDarkMode(boolean isDarkMode) {
                 // Ocultar la lista si no hay ejercicios
                 exerciseList.setVisible(!exercicis.isEmpty());
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Error: Error: The workout select is not a valid.");
+                JOptionPane.showMessageDialog(this, "Error: The workout select is not a valid.");
             }
         }
 
@@ -706,7 +763,6 @@ public void applyDarkMode(boolean isDarkMode) {
     private javax.swing.JButton editExerciseButton;
     private javax.swing.JList<String> exerciseList;
     private javax.swing.JTable exercisesTable;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanelCalendar;
     private javax.swing.JPanel jPanelExercicis;
     private javax.swing.JScrollPane jScrollExerciseList;

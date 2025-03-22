@@ -1,5 +1,6 @@
 package mosqueira.trackfit.views;
 
+import java.awt.Font;
 import java.awt.Frame;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,11 +24,43 @@ public class DialogWorkouts extends javax.swing.JDialog {
     public DialogWorkouts(Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        setLocationRelativeTo(parent); // Centra el diálogo en el frame principal
+        applyStyles(); 
         cargarUsuarios();
-
+        setLocationRelativeTo(parent); // Centra el diálogo en el frame principal
     }
+    private void applyStyles() {
+    // Establecemos un esquema de colores consistentes para los componentes
+    jDesktopVisualWorkout.setBackground(new java.awt.Color(240, 240, 240));  // Fondo de la ventana
 
+    // Estilo para las etiquetas
+    jComment.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
+    jComment.setForeground(new java.awt.Color(0, 51, 102));  // Color para las etiquetas de comentario
+
+    jListUsers.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
+    jListUsers.setForeground(new java.awt.Color(0, 51, 102));  // Color para las etiquetas de lista de usuarios
+
+    jLabelDate.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
+    jLabelDate.setForeground(new java.awt.Color(0, 51, 102));  // Color para las etiquetas de fecha
+
+    // Estilo para los campos de texto
+    jTextComment.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
+    jTextComment.setBackground(new java.awt.Color(255, 255, 255));  // Fondo blanco para el campo de texto
+
+    // Estilo para los combos
+    jComboBoxUsersWork.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
+    jComboBoxUsersWork.setBackground(new java.awt.Color(255, 255, 255));  // Fondo blanco para el combo de usuarios
+
+    // Estilo para el JSpinner de la fecha
+    jSpinnerForDate.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
+
+    // Estilo para los botones
+    jButtonAddWorkout.setBackground(new java.awt.Color(0, 153, 76));
+    jButtonAddWorkout.setForeground(new java.awt.Color(255, 255, 255));
+
+    jButtonCancelarWorkouts.setBackground(new java.awt.Color(255, 51, 51));
+    jButtonCancelarWorkouts.setForeground(new java.awt.Color(255, 255, 255));
+}
+     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -43,6 +76,8 @@ public class DialogWorkouts extends javax.swing.JDialog {
         jButtonCancelarWorkouts = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jDesktopVisualWorkout.setPreferredSize(new java.awt.Dimension(497, 400));
 
         jComment.setText("Comment");
 
@@ -127,7 +162,7 @@ public class DialogWorkouts extends javax.swing.JDialog {
                 .addGroup(jDesktopVisualWorkoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jComment, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextComment, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
                 .addGroup(jDesktopVisualWorkoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonAddWorkout)
                     .addComponent(jButtonCancelarWorkouts))
@@ -144,7 +179,7 @@ public class DialogWorkouts extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jDesktopVisualWorkout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 6, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();

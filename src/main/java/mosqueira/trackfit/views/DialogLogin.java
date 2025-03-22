@@ -1,7 +1,7 @@
+
 package mosqueira.trackfit.views;
+
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JOptionPane;
@@ -13,27 +13,40 @@ import mosqueira.trackfit.dto.Usuaris;
  *
  * @author Lulas
  */
+
 public class DialogLogin extends javax.swing.JDialog {
 
     private Main mainFra;
     private DataAccess da = new DataAccess();
     private Usuaris loggedInUser;
     private JCheckBoxMenuItem darkMode;
-    private static final Logger logger = Logger.getLogger(DialogLogin.class.getName());
-    JCheckBox showPasswordCheckBox = new JCheckBox("Mostrar contraseña");
+    JCheckBox showPasswordCheckBox = new JCheckBox("Show password");
 
     /**
      * Creates new form NewJDialog
      */
-    public DialogLogin(java.awt.Frame parent, boolean modal) {
+     public DialogLogin(java.awt.Frame parent, boolean modal, boolean isDarkMode) {
         super(parent, modal);
         initComponents();
         this.mainFra = (Main) parent;
         setLocationRelativeTo(this);
-        addIcons();
-        jPanel1.add(showPasswordCheckBox);
+        
+        // Inicializar el checkbox del modo oscuro
+        darkMode = new JCheckBoxMenuItem("Modo oscuro");
+        darkMode.setState(isDarkMode);
+        darkMode.addActionListener(e -> {
+            boolean darkModeSelected = darkMode.getState();
+            applyDarkMode(darkModeSelected);
+        });
+        
+        jMenuEdit.add(darkMode); // Asegurarse de agregarlo correctamente al menú
+
+        // Inicializar el estado del modo oscuro al abrir el login
+        applyDarkMode(isDarkMode);
+        
+        // Agregar checkbox para mostrar/ocultar la contraseña
+        jPanelLogin.add(showPasswordCheckBox);
         showPasswordCheckBox.setBounds(290, 360, 180, 20);
-        showPasswordCheckBox.setFont(new java.awt.Font("SansSerif", 3, 14));
         showPasswordCheckBox.addActionListener(e -> {
             if (showPasswordCheckBox.isSelected()) {
                 txtPassword.setEchoChar((char) 0); // Muestra la contraseña
@@ -41,44 +54,31 @@ public class DialogLogin extends javax.swing.JDialog {
                 txtPassword.setEchoChar('*'); // Oculta la contraseña
             }
         });
+
+        // Agregar iconos a los elementos visuales
+        addIcons();
     }
 
     // Añade iconos a los elementos visuales
     private void addIcons() {
         Email.setIcon(ThemeManager.resizeIcon("/images/email_icon.png", 50, 50));
         Password.setIcon(ThemeManager.resizeIcon("/images/password_icon.png", 50, 50));
-        botonAcceso.setIcon(ThemeManager.resizeIcon("/images/login_icon.png", 80, 80));
+        botonAcceso.setIcon(ThemeManager.resizeIcon("/images/login_icon.png", 60, 60));
         jMenufile.setIcon(ThemeManager.resizeIcon("/images/file_icon.png", 16, 16));
         jMenuReturn.setIcon(ThemeManager.resizeIcon("/images/return_icon.png", 16, 16));
         jMenuEdit.setIcon(ThemeManager.resizeIcon("/images/edit_icon.png", 16, 16));
 
-        // Inicializar el checkbox "Modo oscuro"
-        darkMode = new JCheckBoxMenuItem("Modo oscuro");
-        darkMode.setState(
-                false); 
-        darkMode.addActionListener(e
-                -> {
-            boolean isDarkMode = darkMode.getState();
-            applyDarkMode(isDarkMode);
-        }
-        );
-
-        jMenuEdit.add(darkMode);
     }
 
     public void applyDarkMode(boolean isDarkMode) {
         if (isDarkMode) {
-            
-            ThemeManager.applyDarkMode(jPanel1);
-            ThemeManager.applyDarkModeToComponents(txtEmail, txtPassword,showPasswordCheckBox);
-            
+            ThemeManager.applyDarkMode(jPanelLogin);
+            ThemeManager.applyDarkModeToComponents(txtEmail, txtPassword, showPasswordCheckBox);
         } else {
-            ThemeManager.applyLightMode(jPanel1);
-            ThemeManager.applyLightModeToComponents(txtEmail, txtPassword,showPasswordCheckBox);
-            
-            
+            ThemeManager.applyLightMode(jPanelLogin);
+            ThemeManager.applyLightModeToComponents(txtEmail, txtPassword, showPasswordCheckBox);
         }
-        jPanel1.repaint(); // Refresca la interfaz
+        jPanelLogin.repaint();
     }
 
     public Usuaris getLoggedInUser() {
@@ -94,38 +94,33 @@ public class DialogLogin extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jPanelLogin = new javax.swing.JPanel();
         botonAcceso = new javax.swing.JButton();
         Password = new javax.swing.JLabel();
         txtPassword = new javax.swing.JPasswordField();
         Email = new javax.swing.JLabel();
         txtEmail = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
+        jlogo = new javax.swing.JLabel();
         jMenuBarLogin = new javax.swing.JMenuBar();
         jMenufile = new javax.swing.JMenu();
         jMenuReturn = new javax.swing.JMenuItem();
         jMenuEdit = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setBackground(java.awt.Color.black);
+        setBackground(new java.awt.Color(204, 204, 204));
         setIconImages(null);
         setMinimumSize(new java.awt.Dimension(700, 600));
         setModal(true);
         setPreferredSize(new java.awt.Dimension(500, 600));
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
-            }
-        });
-        getContentPane().setLayout(null);
 
-        jPanel1.setBackground(new java.awt.Color(249, 249, 231));
-        jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel1.setForeground(new java.awt.Color(255, 255, 153));
-        jPanel1.setMinimumSize(new java.awt.Dimension(700, 600));
-        jPanel1.setPreferredSize(new java.awt.Dimension(700, 600));
-        jPanel1.setLayout(null);
+        jPanelLogin.setBackground(new java.awt.Color(204, 204, 204));
+        jPanelLogin.setForeground(new java.awt.Color(255, 255, 255));
+        jPanelLogin.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jPanelLogin.setMinimumSize(new java.awt.Dimension(700, 600));
+        jPanelLogin.setPreferredSize(new java.awt.Dimension(700, 600));
+        jPanelLogin.setLayout(null);
 
+        botonAcceso.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/login_icon.png"))); // NOI18N
         botonAcceso.setBorder(null);
         botonAcceso.setBorderPainted(false);
         botonAcceso.setContentAreaFilled(false);
@@ -135,8 +130,8 @@ public class DialogLogin extends javax.swing.JDialog {
                 botonAccesoActionPerformed(evt);
             }
         });
-        jPanel1.add(botonAcceso);
-        botonAcceso.setBounds(290, 400, 100, 90);
+        jPanelLogin.add(botonAcceso);
+        botonAcceso.setBounds(300, 430, 100, 90);
         botonAcceso.getAccessibleContext().setAccessibleParent(botonAcceso);
 
         Password.setFont(new java.awt.Font("SansSerif", 3, 14)); // NOI18N
@@ -144,46 +139,46 @@ public class DialogLogin extends javax.swing.JDialog {
         Password.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         Password.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/password_icon.png"))); // NOI18N
         Password.setMinimumSize(new java.awt.Dimension(0, 0));
-        jPanel1.add(Password);
-        Password.setBounds(160, 320, 70, 50);
+        jPanelLogin.add(Password);
+        Password.setBounds(190, 300, 80, 60);
 
         txtPassword.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtPassword.setText("string");
-        txtPassword.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPasswordActionPerformed(evt);
-            }
-        });
-        jPanel1.add(txtPassword);
-        txtPassword.setBounds(290, 330, 100, 26);
+        jPanelLogin.add(txtPassword);
+        txtPassword.setBounds(280, 316, 140, 30);
 
         Email.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         Email.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/email_icon.png"))); // NOI18N
         Email.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jPanel1.add(Email);
-        Email.setBounds(150, 230, 80, 60);
+        jPanelLogin.add(Email);
+        Email.setBounds(190, 230, 80, 60);
 
         txtEmail.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtEmail.setText("a@b.c");
-        txtEmail.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtEmailActionPerformed(evt);
-            }
-        });
-        jPanel1.add(txtEmail);
-        txtEmail.setBounds(290, 250, 100, 26);
+        jPanelLogin.add(txtEmail);
+        txtEmail.setBounds(280, 246, 140, 40);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logo.png"))); // NOI18N
-        jLabel1.setText("jLabel1");
-        jLabel1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(255, 153, 51)));
-        jLabel1.setPreferredSize(new java.awt.Dimension(150, 150));
-        jPanel1.add(jLabel1);
-        jLabel1.setBounds(240, 50, 180, 160);
+        jlogo.setBackground(new java.awt.Color(191, 154, 207));
+        jlogo.setForeground(new java.awt.Color(204, 204, 255));
+        jlogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jlogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logo.png"))); // NOI18N
+        jlogo.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jlogo.setRequestFocusEnabled(false);
+        jlogo.setVerifyInputWhenFocusTarget(false);
+        jlogo.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        jPanelLogin.add(jlogo);
+        jlogo.setBounds(210, -10, 250, 240);
 
-        getContentPane().add(jPanel1);
-        jPanel1.setBounds(0, -30, 690, 580);
+        jMenuBarLogin.setBackground(new java.awt.Color(102, 102, 102));
+        jMenuBarLogin.setBorder(null);
+        jMenuBarLogin.setForeground(new java.awt.Color(255, 255, 255));
 
+        jMenufile.setBackground(new java.awt.Color(0, 0, 0));
+        jMenufile.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jMenufile.setForeground(new java.awt.Color(255, 255, 255));
         jMenufile.setText("File");
+        jMenufile.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jMenufile.setPreferredSize(new java.awt.Dimension(50, 20));
         jMenufile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenufileActionPerformed(evt);
@@ -200,75 +195,67 @@ public class DialogLogin extends javax.swing.JDialog {
 
         jMenuBarLogin.add(jMenufile);
 
+        jMenuEdit.setBackground(new java.awt.Color(0, 0, 0));
+        jMenuEdit.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jMenuEdit.setForeground(new java.awt.Color(255, 255, 255));
+        jMenuEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/edit_exercise_icon.png"))); // NOI18N
         jMenuEdit.setText("Edit");
+        jMenuEdit.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jMenuEdit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jMenuEdit.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        jMenuEdit.setPreferredSize(new java.awt.Dimension(50, 20));
         jMenuBarLogin.add(jMenuEdit);
 
         setJMenuBar(jMenuBarLogin);
 
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanelLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 702, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanelLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtEmailActionPerformed
-
-    private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtPasswordActionPerformed
-
     private void botonAccesoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAccesoActionPerformed
-        loginUser();
-    }//GEN-LAST:event_botonAccesoActionPerformed
-    private void loginUser() {
-        // Obtenemos el email ingresado por el usuario
         String email = txtEmail.getText();
-        char[] password = txtPassword.getPassword();
+        Usuaris usuario = da.getUser(email);
+        // Restablecer los bordes de los campos
         txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.BLACK));
         txtPassword.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.BLACK));
-        try {
-            // 1. Obtener el usuario desde la base de datos usando el email ingresado
-            Usuaris usuario = da.getUser(email);
+        // Validar que el email no esté vacío
+        if (email.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Error: The email cannot be empty.");
+            txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.BLUE));
+            return;
+        }
 
-            // 2. Comprobar si el usuario existe
-            if (usuario == null) {
-                JOptionPane.showMessageDialog(this, "Error: Usuario no encontrado.");
-                txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.ORANGE));
-                return; // Salir del método si no se encuentra el usuario
-            }
+        if (usuario.isInstructor()) {
 
-            // 3. Comprobar si el usuario es un instructor
-            if (!usuario.isInstructor()) {
-                JOptionPane.showMessageDialog(this, "Error: El usuario no es un instructor.");
-                txtEmail.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.ORANGE));
-                return; // Salir del método si el usuario no es instructor
-            }
-
-            // 4. Verificar la contraseña utilizando BCrypt
-            String hashPasswordDB = usuario.getPasswordHash();
-            var result = BCrypt.verifyer().verify(password, hashPasswordDB);
-
-            if (result.verified) {
-                loggedInUser = usuario;
-                mainFra.showListFrame(loggedInUser);
+            if (BCrypt.verifyer().verify(txtPassword.getPassword(), usuario.getPasswordHash()).verified) {
+                mainFra.setLoggedInstructor(usuario);
+                mainFra.showListFrame(usuario);
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Error: Contraseña incorrecta.");
-                // Resaltar campo de contraseña
-                txtPassword.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED));
+                JOptionPane.showMessageDialog(this,"The password is incorrect.");
             }
 
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Hubo un error al intentar iniciar sesión. Por favor, inténtalo de nuevo más tarde.");
-            logger.log(Level.SEVERE, "Error al acceder: ", e);
+        } else {
+            JOptionPane.showMessageDialog(this,"User not found.");
+            txtPassword.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.BLUE));
         }
-    }
+    
+    }//GEN-LAST:event_botonAccesoActionPerformed
+
+
     private void jMenufileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenufileActionPerformed
         jMenuEdit.add(darkMode);
     }//GEN-LAST:event_jMenufileActionPerformed
-
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        // TODO add your handling code here:
-    }//GEN-LAST:event_formWindowOpened
 
     private void jMenuReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuReturnActionPerformed
         setVisible(false);
@@ -281,12 +268,12 @@ public class DialogLogin extends javax.swing.JDialog {
     private javax.swing.JLabel Email;
     private javax.swing.JLabel Password;
     private javax.swing.JButton botonAcceso;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBarLogin;
     private javax.swing.JMenu jMenuEdit;
     private javax.swing.JMenuItem jMenuReturn;
     private javax.swing.JMenu jMenufile;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanelLogin;
+    private javax.swing.JLabel jlogo;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JPasswordField txtPassword;
     // End of variables declaration//GEN-END:variables

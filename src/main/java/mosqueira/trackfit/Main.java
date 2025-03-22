@@ -1,7 +1,7 @@
 package mosqueira.trackfit;
-
 import mosqueira.trackfit.views.ThemeManager;
 import java.awt.BorderLayout;
+import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
@@ -9,6 +9,7 @@ import mosqueira.trackfit.views.PanelUsuariosAsignados;
 import javax.swing.JOptionPane;
 import mosqueira.trackfit.dto.Usuaris;
 import mosqueira.trackfit.views.DialogLogin;
+import static mosqueira.trackfit.views.ThemeManager.resizeIcon;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -18,7 +19,7 @@ import net.miginfocom.swing.MigLayout;
 public class Main extends javax.swing.JFrame {
 
     private PanelUsuariosAsignados listF;
-    private Usuaris instructor;
+    private static Usuaris instructor;
     private JCheckBoxMenuItem darkMode;
 
     public Main() {
@@ -29,13 +30,14 @@ public class Main extends javax.swing.JFrame {
 
     public void setupWindow() {
         setLocationRelativeTo(this); // Centra la ventana
-        setSize(900, 600);
+        
         jPanelMain.setLayout(new MigLayout("wrap, align center", "[center]", "[][]40[]"));
         jPanelMain.add(jlogo, "align center, gaptop 50");
         jPanelMain.add(IraDialogo, "align center, gaptop 50");
         // Añadir jPanelMain al centro del contenedor principal
         getContentPane().add(jPanelMain, BorderLayout.CENTER);
         addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 jPanelMain.revalidate();
                 jPanelMain.repaint();
@@ -43,32 +45,33 @@ public class Main extends javax.swing.JFrame {
         });
         // Agregar un listener para la confirmación de salida
         addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 confirmExit();
-            }
+    }
         });
     }
 
     private void confirmExit() {
         int option = JOptionPane.showConfirmDialog(Main.this,
-                "¿Estás seguro de que deseas salir?", "Confirmar salida",
+                " Are you sure you want to exit?", "Confirm exit",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (option == JOptionPane.YES_OPTION) {
             // Si selecciona "Sí", cierra la aplicación
             System.exit(0);
         } else {
-           
+
             setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         }
     }
 
     private void setupIconsAndMenus() {
         // Configurar ítems del menú de archivo
-        jMenuExit.addActionListener(this::jMenuExitActionPerformed);
-        logout.addActionListener(this::logoutActionPerformed);
+        jMenuExit.addActionListener(evt -> this.jMenuExitActionPerformed(evt));
+        logout.addActionListener(evt -> this.logoutActionPerformed(evt));
 
         // Configurar ítems del menú de ayuda
-        jMenuItem1.addActionListener(this::jMenuItem1ActionPerformed);
+        jMenuItemAbout.addActionListener(evt -> this.jMenuItemAboutActionPerformed(evt));
 
         // Configurar ítem de modo oscuro
         darkMode = new JCheckBoxMenuItem("Modo oscuro");
@@ -77,22 +80,20 @@ public class Main extends javax.swing.JFrame {
 
         // Configurar íconos para los botones y menús
         IraDialogo.setIcon(ThemeManager.resizeIcon("/images/access_icon1.png", 100, 100));
-        jlogo.setIcon(ThemeManager.resizeIcon("/images/logo.png", 250, 180));
+
     }
 
     public void showListFrame(Usuaris u) {
-        this.instructor = u;
-        getContentPane().removeAll();  // Limpiar contenido actual
-        getContentPane().setLayout(new BorderLayout()); // Mantener layout flexible
-
+    this.instructor = u;
+        getContentPane().removeAll();
+        // Crear el panel ListUsers y pasarlo al marco
         listF = new PanelUsuariosAsignados(this, instructor, isDarkModeEnabled());
-
-        getContentPane().add(listF, BorderLayout.CENTER); // Asegurar que ocupa todo el espacio
-
-        // Redibujar la ventana para que se apliquen los cambios
-        revalidate();
+        listF.setBounds(0, 0, 900, 800); // Definir las posiciones y tamaños manualmente
+        // Agregar el panel de usuarios
+        getContentPane().add(listF);
+        listF.revalidate();
         repaint();
-    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -111,24 +112,22 @@ public class Main extends javax.swing.JFrame {
         jMenuExit = new javax.swing.JMenuItem();
         logout = new javax.swing.JMenuItem();
         jMenuHelp = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItemAbout = new javax.swing.JMenuItem();
         jMenuWeb = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.GreyInline"));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setForeground(java.awt.Color.darkGray);
-        setMinimumSize(new java.awt.Dimension(700, 600));
 
-        jPanelMain.setBackground(new java.awt.Color(249, 249, 231));
+        jPanelMain.setBackground(new java.awt.Color(204, 204, 204));
         jPanelMain.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanelMain.setForeground(new java.awt.Color(249, 249, 231));
-        jPanelMain.setPreferredSize(new java.awt.Dimension(900, 900));
+        jPanelMain.setForeground(new java.awt.Color(204, 204, 204));
+        jPanelMain.setPreferredSize(new java.awt.Dimension(1000, 900));
         jPanelMain.setRequestFocusEnabled(false);
-        jPanelMain.setLayout(null);
 
         IraDialogo.setBackground(new java.awt.Color(255, 255, 255));
-        IraDialogo.setToolTipText("");
+        IraDialogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/access_icon1.png"))); // NOI18N
         IraDialogo.setBorder(null);
         IraDialogo.setBorderPainted(false);
         IraDialogo.setContentAreaFilled(false);
@@ -139,30 +138,42 @@ public class Main extends javax.swing.JFrame {
                 IraDialogoActionPerformed(evt);
             }
         });
-        jPanelMain.add(IraDialogo);
-        IraDialogo.setBounds(540, 340, 180, 120);
 
-        jlogo.setBackground(new java.awt.Color(191, 154, 207));
-        jlogo.setForeground(new java.awt.Color(204, 204, 255));
         jlogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jlogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logo.png"))); // NOI18N
         jlogo.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         jlogo.setRequestFocusEnabled(false);
         jlogo.setVerifyInputWhenFocusTarget(false);
         jlogo.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        jPanelMain.add(jlogo);
-        jlogo.setBounds(500, 90, 250, 180);
+
+        javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
+        jPanelMain.setLayout(jPanelMainLayout);
+        jPanelMainLayout.setHorizontalGroup(
+            jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jlogo, javax.swing.GroupLayout.PREFERRED_SIZE, 748, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(IraDialogo, javax.swing.GroupLayout.PREFERRED_SIZE, 748, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        jPanelMainLayout.setVerticalGroup(
+            jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelMainLayout.createSequentialGroup()
+                .addComponent(jlogo)
+                .addGap(0, 0, 0)
+                .addComponent(IraDialogo, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         getContentPane().add(jPanelMain, java.awt.BorderLayout.CENTER);
 
-        jMenuFrame.setBackground(new java.awt.Color(255, 255, 255));
+        jMenuFrame.setBackground(new java.awt.Color(102, 102, 102));
         jMenuFrame.setBorder(null);
-        jMenuFrame.setForeground(new java.awt.Color(255, 153, 51));
+        jMenuFrame.setForeground(new java.awt.Color(0, 0, 0));
 
-        jMenuFile.setBackground(new java.awt.Color(255, 153, 102));
+        jMenuFile.setBackground(new java.awt.Color(0, 0, 0));
         jMenuFile.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jMenuFile.setForeground(new java.awt.Color(255, 255, 255));
         jMenuFile.setText("File");
+        jMenuFile.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jMenuFile.setMinimumSize(new java.awt.Dimension(652, 395));
+        jMenuFile.setPreferredSize(new java.awt.Dimension(50, 20));
         jMenuFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuFileActionPerformed(evt);
@@ -187,25 +198,29 @@ public class Main extends javax.swing.JFrame {
 
         jMenuFrame.add(jMenuFile);
 
-        jMenuHelp.setBackground(new java.awt.Color(255, 153, 102));
+        jMenuHelp.setBackground(new java.awt.Color(0, 0, 0));
         jMenuHelp.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jMenuHelp.setForeground(new java.awt.Color(255, 255, 255));
         jMenuHelp.setText("Help");
+        jMenuHelp.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jMenuHelp.setPreferredSize(new java.awt.Dimension(50, 20));
 
-        jMenuItem1.setText("About");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemAbout.setText("About");
+        jMenuItemAbout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                jMenuItemAboutActionPerformed(evt);
             }
         });
-        jMenuHelp.add(jMenuItem1);
+        jMenuHelp.add(jMenuItemAbout);
 
         jMenuFrame.add(jMenuHelp);
 
-        jMenuWeb.setBackground(new java.awt.Color(255, 153, 51));
+        jMenuWeb.setBackground(new java.awt.Color(0, 0, 0));
         jMenuWeb.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jMenuWeb.setForeground(new java.awt.Color(255, 255, 255));
         jMenuWeb.setText("Web");
-        jMenuWeb.setMinimumSize(new java.awt.Dimension(29, 20));
-        jMenuWeb.setPreferredSize(new java.awt.Dimension(29, 20));
+        jMenuWeb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jMenuWeb.setPreferredSize(new java.awt.Dimension(50, 20));
         jMenuWeb.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jMenuWebMouseClicked(evt);
@@ -225,16 +240,22 @@ public class Main extends javax.swing.JFrame {
     private void jMenuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuExitActionPerformed
         confirmExit();
     }//GEN-LAST:event_jMenuExitActionPerformed
+    public void setLoggedInstructor(Usuaris instructor) {
+        this.instructor = instructor;
+    }
 
+    public static Usuaris getLoggedInstructor() {
+        return instructor;
+    }
     private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
         getContentPane().add(jPanelMain);
         jPanelMain.setVisible(true);
         listF.setVisible(false);
     }//GEN-LAST:event_logoutActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void jMenuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAboutActionPerformed
         // Asignar icono redimensionado al menú
-        ImageIcon icon = ThemeManager.resizeIcon("/images/about_icon.png", 20, 20); // 20x20 es el tamaño deseado
+        ImageIcon icon = resizeIcon("/images/about_icon.png", 20, 20); // 20x20 es el tamaño deseado
         JOptionPane.showMessageDialog(this,
                 "Developed by Romina Marlene Mosqueira Rodriguez\n"
                 + "Course: 2º DAM \n"
@@ -244,12 +265,12 @@ public class Main extends javax.swing.JFrame {
                 "About",
                 JOptionPane.INFORMATION_MESSAGE,
                 icon);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_jMenuItemAboutActionPerformed
 
     private void IraDialogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IraDialogoActionPerformed
-        DialogLogin iraDialogo = new DialogLogin(this, true);
-        iraDialogo.applyDarkMode(isDarkModeEnabled());
+        DialogLogin iraDialogo =new DialogLogin(this, true, isDarkModeEnabled()); 
         iraDialogo.setVisible(true);
+        iraDialogo.applyDarkMode(isDarkModeEnabled());
 
     }//GEN-LAST:event_IraDialogoActionPerformed
 
@@ -258,8 +279,9 @@ public class Main extends javax.swing.JFrame {
         try {
             String url = "http://www.ejemplo.com/"; // Cambia esta URL por la de tu sitio web
             java.awt.Desktop.getDesktop().browse(java.net.URI.create(url)); // Abre la URL en el navegador predeterminado
-        } catch (Exception e) {
-            e.printStackTrace(); // Manejo de errores si no se puede abrir el sitio
+        } catch (IOException e) {
+            // Manejo de errores si no se puede abrir el sitio
+            
         }
     }//GEN-LAST:event_jMenuWebMouseClicked
     private void toggleTheme() {
@@ -272,14 +294,14 @@ public class Main extends javax.swing.JFrame {
     public void applyTheme(boolean isDarkMode) {
         if (isDarkMode) {
             // Aplicar modo oscuro a todos los paneles
-            ThemeManager.applyDarkMode(jPanelMain);
+            ThemeManager.applyDarkMode(jPanelMain,listF);
             // Aplicar modo oscuro a otros componentes
-            ThemeManager.applyDarkModeToComponents(jlogo, IraDialogo, jMenuFile, jMenuExit, logout, jMenuHelp, jMenuItem1, jMenuWeb);
+            ThemeManager.applyDarkModeToComponents(jlogo, IraDialogo, jMenuFile, jMenuExit, logout, jMenuHelp, jMenuItemAbout, jMenuWeb);
         } else {
             // Aplicar modo claro a todos los paneles
-            ThemeManager.applyLightMode(jPanelMain);
+            ThemeManager.applyLightMode(jPanelMain,listF);
             // Aplicar modo claro a otros componentes
-            ThemeManager.applyLightModeToComponents(jlogo, IraDialogo, jMenuFile, jMenuExit, logout, jMenuHelp, jMenuItem1, jMenuWeb);
+            ThemeManager.applyLightModeToComponents(jlogo, IraDialogo, jMenuFile, jMenuExit, logout, jMenuHelp, jMenuItemAbout, jMenuWeb);
         }
     }
 
@@ -291,7 +313,7 @@ public class Main extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Main().setVisible(true);
@@ -305,7 +327,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenu jMenuFile;
     private javax.swing.JMenuBar jMenuFrame;
     private javax.swing.JMenu jMenuHelp;
-    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItemAbout;
     private javax.swing.JMenu jMenuWeb;
     private javax.swing.JPanel jPanelMain;
     private javax.swing.JLabel jlogo;

@@ -58,14 +58,18 @@ public class DataAccess {
         return usuaris;
     }
 
-    public Usuaris getUser(String email) {
-        Usuaris user = new Usuaris();
-        String sql = "SELECT * FROM Usuaris WHERE Email=?";
-        Connection connection = getConnection();
-        try {
-            PreparedStatement selectStatement = connection.prepareStatement(sql);
+    /**
+     *
+     * @param email
+     * @return
+     */
+    public static Usuaris getUser(String email) {
+        Usuaris user = null;
+        String sql = "SELECT * FROM Usuaris WHERE Email = ?";
+        try (Connection connection = getConnection(); PreparedStatement selectStatement = connection.prepareStatement(sql);) {
             selectStatement.setString(1, email);
             ResultSet resultSet = selectStatement.executeQuery();
+            user = new Usuaris();
             while (resultSet.next()) {
                 user.setId(resultSet.getInt("Id"));
                 user.setNom(resultSet.getString("Nom"));
@@ -73,10 +77,8 @@ public class DataAccess {
                 user.setPasswordHash(resultSet.getString("PasswordHash"));
                 user.setInstructor(resultSet.getBoolean("Instructor"));
             }
-            selectStatement.close();
-            connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return user;
     }
@@ -91,32 +93,32 @@ public class DataAccess {
         String sql = "SELECT * FROM Usuaris WHERE AssignedInstructor = ? AND Instructor != 1";
         Connection connection = getConnection();
         try {
-        try (PreparedStatement selectStatement = connection.prepareStatement(sql)) {
-            // Establecemos el ID del instructor como parámetro en la consulta.
-            selectStatement.setInt(1, instructorId); 
-            // Ejecutamos la consulta.
-            ResultSet resultSet = selectStatement.executeQuery();
-            // Procesamos los resultados.
-            while (resultSet.next()) {
-                Usuaris user = new Usuaris();  
-                // Asignamos los valores de la base de datos a la clase Usuaris.
-                user.setId(resultSet.getInt("Id"));
-                user.setNom(resultSet.getString("Nom"));
-                user.setEmail(resultSet.getString("Email"));
-                user.setPasswordHash(resultSet.getString("PasswordHash"));
-                // Si Instructor es igual a 1 (es instructor), seteamos 'true'. Si no, 'false'.
-                user.setInstructor(resultSet.getInt("Instructor") == 1); 
-                // Añadimos el usuario a la lista.
-                usuaris.add(user);
+            try (PreparedStatement selectStatement = connection.prepareStatement(sql)) {
+                // Establecemos el ID del instructor como parámetro en la consulta.
+                selectStatement.setInt(1, instructorId);
+                // Ejecutamos la consulta.
+                ResultSet resultSet = selectStatement.executeQuery();
+                // Procesamos los resultados.
+                while (resultSet.next()) {
+                    Usuaris user = new Usuaris();
+                    // Asignamos los valores de la base de datos a la clase Usuaris.
+                    user.setId(resultSet.getInt("Id"));
+                    user.setNom(resultSet.getString("Nom"));
+                    user.setEmail(resultSet.getString("Email"));
+                    user.setPasswordHash(resultSet.getString("PasswordHash"));
+                    // Si Instructor es igual a 1 (es instructor), seteamos 'true'. Si no, 'false'.
+                    user.setInstructor(resultSet.getInt("Instructor") == 1);
+                    // Añadimos el usuario a la lista.
+                    usuaris.add(user);
+                }
             }
+            connection.close();  // Cerramos la conexión.
+        } catch (SQLException ex) {
+            Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
         }
-        connection.close();  // Cerramos la conexión.
-    } catch (SQLException ex) {
-        Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, ex);
+        return usuaris;  // Retornamos la lista de usuarios.
     }
-    return usuaris;  // Retornamos la lista de usuarios.
-}
-    
+
     public ArrayList<Workouts> getWorkoutsForUser(int userId) {
         ArrayList<Workouts> workout = new ArrayList<>();
         String sql = "SELECT Id, UserId, ForDate, Comments FROM Workouts WHERE UserId = ?";

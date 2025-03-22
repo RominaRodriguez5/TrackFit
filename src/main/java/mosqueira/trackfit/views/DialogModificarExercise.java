@@ -50,21 +50,18 @@ public class DialogModificarExercise extends javax.swing.JDialog {
         jComboExercicis = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setName("MODIFICAR EXERCISE\n"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(497, 400));
 
         jDesktopModificar.setForeground(new java.awt.Color(153, 153, 153));
 
         jNomExerciciModificar.setBackground(new java.awt.Color(255, 255, 153));
         jNomExerciciModificar.setFont(new java.awt.Font("SansSerif", 2, 12)); // NOI18N
         jNomExerciciModificar.setText("Name Exercicis");
-        jDesktopModificar.add(jNomExerciciModificar);
-        jNomExerciciModificar.setBounds(30, 90, 100, 30);
+        jNomExerciciModificar.setPreferredSize(new java.awt.Dimension(497, 400));
 
         jDescripcioExercicisModificar.setFont(new java.awt.Font("SansSerif", 2, 12)); // NOI18N
         jDescripcioExercicisModificar.setText("Descripcio");
-        jDesktopModificar.add(jDescripcioExercicisModificar);
-        jDescripcioExercicisModificar.setBounds(30, 180, 110, 30);
-        jDesktopModificar.add(jTextNomExerciciModificar);
-        jTextNomExerciciModificar.setBounds(150, 90, 180, 30);
 
         jButtonAddModificado.setText("Add");
         jButtonAddModificado.addActionListener(new java.awt.event.ActionListener() {
@@ -72,8 +69,6 @@ public class DialogModificarExercise extends javax.swing.JDialog {
                 jButtonAddModificadoActionPerformed(evt);
             }
         });
-        jDesktopModificar.add(jButtonAddModificado);
-        jButtonAddModificado.setBounds(70, 250, 100, 23);
 
         jButtonCancelModificacion.setText("Cancel");
         jButtonCancelModificacion.addActionListener(new java.awt.event.ActionListener() {
@@ -81,10 +76,6 @@ public class DialogModificarExercise extends javax.swing.JDialog {
                 jButtonCancelModificacionActionPerformed(evt);
             }
         });
-        jDesktopModificar.add(jButtonCancelModificacion);
-        jButtonCancelModificacion.setBounds(220, 250, 90, 23);
-        jDesktopModificar.add(jTextDescripcioModificar);
-        jTextDescripcioModificar.setBounds(150, 180, 180, 30);
 
         jComboExercicis.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboExercicis.addActionListener(new java.awt.event.ActionListener() {
@@ -92,26 +83,70 @@ public class DialogModificarExercise extends javax.swing.JDialog {
                 jComboExercicisActionPerformed(evt);
             }
         });
-        jDesktopModificar.add(jComboExercicis);
-        jComboExercicis.setBounds(160, 20, 140, 22);
+
+        jDesktopModificar.setLayer(jNomExerciciModificar, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopModificar.setLayer(jDescripcioExercicisModificar, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopModificar.setLayer(jTextNomExerciciModificar, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopModificar.setLayer(jButtonAddModificado, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopModificar.setLayer(jButtonCancelModificacion, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopModificar.setLayer(jTextDescripcioModificar, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopModificar.setLayer(jComboExercicis, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jDesktopModificarLayout = new javax.swing.GroupLayout(jDesktopModificar);
+        jDesktopModificar.setLayout(jDesktopModificarLayout);
+        jDesktopModificarLayout.setHorizontalGroup(
+            jDesktopModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDesktopModificarLayout.createSequentialGroup()
+                .addGroup(jDesktopModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jDesktopModificarLayout.createSequentialGroup()
+                        .addGap(160, 160, 160)
+                        .addComponent(jComboExercicis, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jDesktopModificarLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jNomExerciciModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addComponent(jTextNomExerciciModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jDesktopModificarLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jDescripcioExercicisModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jTextDescripcioModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jDesktopModificarLayout.createSequentialGroup()
+                        .addGap(70, 70, 70)
+                        .addComponent(jButtonAddModificado, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(50, 50, 50)
+                        .addComponent(jButtonCancelModificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(110, Short.MAX_VALUE))
+        );
+        jDesktopModificarLayout.setVerticalGroup(
+            jDesktopModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDesktopModificarLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jComboExercicis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48)
+                .addGroup(jDesktopModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jNomExerciciModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextNomExerciciModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(60, 60, 60)
+                .addGroup(jDesktopModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jDescripcioExercicisModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextDescripcioModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(40, 40, 40)
+                .addGroup(jDesktopModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonAddModificado)
+                    .addComponent(jButtonCancelModificacion))
+                .addContainerGap(97, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 440, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jDesktopModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addComponent(jDesktopModificar, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 370, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(jDesktopModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addComponent(jDesktopModificar, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         pack();
