@@ -9,7 +9,7 @@
 
 
 
-## Descripción
+##  Clase `Main`
 Se encarga de gestionar la interfaz gráfica del usuario (GUI), el inicio de sesión del instructor, la visualización de usuarios asignados y el manejo de la apariencia de la aplicación con un tema claro y oscuro.
 ## Funcionalidades:
 - **Gestión de la ventana principal**: Controla la disposición de los componentes y la visualización de los usuarios asignados al instructor.
