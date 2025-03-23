@@ -14,7 +14,6 @@
 
 ![bocetoActualizado del diagrama de la Aplicacion](https://github.com/user-attachments/assets/e44d1299-eb0e-41c0-92bd-516b021823f8)
 
-![Ventana principal de la aplicación ](https://github.com/user-attachments/assets/1e2157e8-95e8-4119-a304-1e97d78f905b)
 
 # Clase `Main`
 Se encarga de gestionar la interfaz gráfica del usuario (GUI), el inicio de sesión del instructor, la visualización de usuarios asignados y el manejo de la apariencia de la aplicación con un tema claro y oscuro.
@@ -23,6 +22,9 @@ Se encarga de gestionar la interfaz gráfica del usuario (GUI), el inicio de ses
 - **Tema oscuro y claro**: Permite alternar entre un tema oscuro y claro a través de un checkbox en el menú.
 - **Cierre de sesión**: Permite cerrar sesión y regresar a la pantalla inicial de inicio de sesión.
 - **Confirmación de salida**: Muestra un cuadro de confirmación cuando se intenta cerrar la aplicación.
+
+
+![Ventana principal de la aplicación ](https://github.com/user-attachments/assets/1e2157e8-95e8-4119-a304-1e97d78f905b)
 
 ## Métodos importantes:
 
@@ -44,7 +46,7 @@ Se encarga de gestionar la interfaz gráfica del usuario (GUI), el inicio de ses
 3. El instructor puede alternar entre el modo oscuro y claro desde el menú de ayuda.
 4. Para cerrar sesión, puede utilizar el menú correspondiente.
 
-![Ventana Login donde se incia sesion](https://github.com/user-attachments/assets/29cb9b9d-0827-48b6-9da9-4d48303a8f51)
+
 
 # Clase `DialogLogin`
 La clase `DialogLogin` es una ventana emergente (diálogo modal) que permite a un instructor iniciar sesión en la aplicación. Ofrece campos para ingresar el correo electrónico y la contraseña, junto con una opción para alternar entre modo oscuro y claro. Si las credenciales son correctas, el instructor accede a la ventana principal de la aplicación. 
@@ -53,6 +55,8 @@ La clase `DialogLogin` es una ventana emergente (diálogo modal) que permite a u
 - **Inicio de sesión**: Permite al instructor iniciar sesión con su correo electrónico y contraseña.
 - **Modo oscuro**: Permite alternar entre modo oscuro y claro mediante un checkbox en el menú de la interfaz.
 - **Mostrar/ocultar contraseña**: Permite al usuario ver o esconder la contraseña ingresada.
+
+![Ventana Login donde se incia sesion](https://github.com/user-attachments/assets/29cb9b9d-0827-48b6-9da9-4d48303a8f51)
 
 ## Métodos importantes:
 
@@ -74,7 +78,6 @@ La clase `DialogLogin` es una ventana emergente (diálogo modal) que permite a u
 4. El instructor puede alternar entre el modo oscuro y claro utilizando el menú.
 
 
-![Ventana de interaccion del instructor con la aplicacion](https://github.com/user-attachments/assets/37fa384f-a0b3-4e33-9c23-9e224525a695)
 
 # Clase PanelUsuariosAsignados
 Es una clase en Java Swing que permite gestionar los entrenamientos y ejercicios asignados a un usuario en un sistema de gestión de entrenamientos. Proporciona funcionalidades para visualizar, agregar, editar y eliminar entrenamientos y ejercicios, así como asignar ejercicios a un entrenamiento específico.
@@ -86,6 +89,9 @@ Es una clase en Java Swing que permite gestionar los entrenamientos y ejercicios
 - Agregar nuevos ejercicios.
 - Editar ejercicios existentes.
 - Eliminar ejercicios de la base de datos.
+
+![Ventana de interaccion del instructor con la aplicacion](https://github.com/user-attachments/assets/37fa384f-a0b3-4e33-9c23-9e224525a695)
+
 ## Estructura de la Clase
 ### Métodos Principales:
 - **`addWorkoutsButtonActionPerformed(evt)`**  
