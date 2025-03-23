@@ -136,3 +136,17 @@ Es una clase en Java Swing que permite gestionar los entrenamientos y ejercicios
 3. Ver la lista de ejercicios disponibles.
 4. Asignar ejercicios a entrenamientos.
 5. Editar o eliminar ejercicios según sea necesario.
+6.  Uso del Componente Calendar
+Se puede descargar el JAR del Componente Calendar desde los tags del repositorio y agregarlo manualmente a tu proyecto.
+El **Componente Calendar** se utiliza para visualizar y seleccionar fechas en las que se han programado entrenamientos.
+### Instalación
+Para utilizar este componente, debes incluir la siguiente dependencia en tu archivo **pom.xml** (si usas Maven):
+
+```xml
+<dependency>
+    <groupId>mosqueira</groupId>
+    <artifactId>ComponenteCalendar</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
+
+# Después de añadir la dependencia, importa el componente en tu clase:
