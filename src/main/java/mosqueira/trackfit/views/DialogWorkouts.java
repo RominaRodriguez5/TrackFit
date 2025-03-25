@@ -12,8 +12,11 @@ import mosqueira.trackfit.dto.Usuaris;
 import mosqueira.trackfit.dto.Workouts;
 
 /**
+ * Clase DialogWorkouts representa un cuadro de diálogo para gestionar
+ * entrenamientos (Workouts). Permite seleccionar un usuario, definir una fecha
+ * y agregar comentarios a un nuevo entrenamiento.
  *
- * @author Lulas
+ * @author Romina Mosqueira
  */
 public class DialogWorkouts extends javax.swing.JDialog {
 
@@ -21,46 +24,48 @@ public class DialogWorkouts extends javax.swing.JDialog {
     private DataAccess da = new DataAccess();
     private List<Usuaris> listUsers;
 
+    /**
+     * Constructor de la clase DialogWorkouts. Inicializa los componentes y
+     * carga la lista de usuarios.
+     *
+     * @param parent Frame principal que contiene este diálogo
+     * @param modal Indica si el diálogo es modal
+     */
     public DialogWorkouts(Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        applyStyles(); 
+        applyStyles();
         cargarUsuarios();
         setLocationRelativeTo(parent); // Centra el diálogo en el frame principal
     }
+
+    /**
+     * Aplica estilos personalizados a los componentes de la interfaz gráfica.
+     */
     private void applyStyles() {
-    // Establecemos un esquema de colores consistentes para los componentes
-    jDesktopVisualWorkout.setBackground(new java.awt.Color(240, 240, 240));  // Fondo de la ventana
+        jDesktopVisualWorkout.setBackground(new java.awt.Color(240, 240, 240));
+        // Estilo para las etiquetas
+        jComment.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
+        jComment.setForeground(new java.awt.Color(0, 51, 102));
+        jListUsers.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
+        jListUsers.setForeground(new java.awt.Color(0, 51, 102));
+        jLabelDate.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
+        jLabelDate.setForeground(new java.awt.Color(0, 51, 102));
+        // Estilo para los campos de texto
+        jTextComment.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
+        jTextComment.setBackground(new java.awt.Color(255, 255, 255));
+        // Estilo para los combos
+        jComboBoxUsersWork.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
+        jComboBoxUsersWork.setBackground(new java.awt.Color(255, 255, 255));
+        // Estilo para el JSpinner de la fecha
+        jSpinnerForDate.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
+        // Estilo para los botones
+        jButtonAddWorkout.setBackground(new java.awt.Color(0, 153, 76));
+        jButtonAddWorkout.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonCancelarWorkouts.setBackground(new java.awt.Color(255, 51, 51));
+        jButtonCancelarWorkouts.setForeground(new java.awt.Color(255, 255, 255));
+    }
 
-    // Estilo para las etiquetas
-    jComment.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
-    jComment.setForeground(new java.awt.Color(0, 51, 102));  // Color para las etiquetas de comentario
-
-    jListUsers.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
-    jListUsers.setForeground(new java.awt.Color(0, 51, 102));  // Color para las etiquetas de lista de usuarios
-
-    jLabelDate.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
-    jLabelDate.setForeground(new java.awt.Color(0, 51, 102));  // Color para las etiquetas de fecha
-
-    // Estilo para los campos de texto
-    jTextComment.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
-    jTextComment.setBackground(new java.awt.Color(255, 255, 255));  // Fondo blanco para el campo de texto
-
-    // Estilo para los combos
-    jComboBoxUsersWork.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
-    jComboBoxUsersWork.setBackground(new java.awt.Color(255, 255, 255));  // Fondo blanco para el combo de usuarios
-
-    // Estilo para el JSpinner de la fecha
-    jSpinnerForDate.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
-
-    // Estilo para los botones
-    jButtonAddWorkout.setBackground(new java.awt.Color(0, 153, 76));
-    jButtonAddWorkout.setForeground(new java.awt.Color(255, 255, 255));
-
-    jButtonCancelarWorkouts.setBackground(new java.awt.Color(255, 51, 51));
-    jButtonCancelarWorkouts.setForeground(new java.awt.Color(255, 255, 255));
-}
-     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -184,8 +189,12 @@ public class DialogWorkouts extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    /**
+     * Carga la lista de usuarios desde la base de datos y la muestra en el
+     * ComboBox.
+     */
     public void cargarUsuarios() {
-        List<Usuaris> usuariosAsignados = da.getAllUsers(); 
+        List<Usuaris> usuariosAsignados = da.getAllUsers();
         DefaultComboBoxModel<String> dcbm = new DefaultComboBoxModel<>();
 
         for (Usuaris usuario : usuariosAsignados) {
@@ -195,6 +204,12 @@ public class DialogWorkouts extends javax.swing.JDialog {
         listUsers = usuariosAsignados;
     }
 
+    /**
+     * Acción ejecutada cuando se selecciona un usuario en el ComboBox.
+     * Actualiza la variable usuarioSeleccionado con el usuario elegido.
+     *
+     * @param evt Evento de selección en el ComboBox
+     */
     private void jComboBoxUsersWorkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxUsersWorkActionPerformed
         String selectedUserName = (String) jComboBoxUsersWork.getSelectedItem();
         if (selectedUserName != null && !selectedUserName.isEmpty()) {
@@ -202,26 +217,28 @@ public class DialogWorkouts extends javax.swing.JDialog {
             for (Usuaris usuario : listUsers) {
                 if (usuario.getNom().equals(selectedUserName)) {
                     usuarioSeleccionado = usuario; // Actualiza el usuario seleccionado
-                    
+
                     System.out.println("Usuario seleccionado (Work): " + usuarioSeleccionado.getId());
                     break;
                 }
 
             }
-            
+
         }
     }//GEN-LAST:event_jComboBoxUsersWorkActionPerformed
-
+    /**
+     * Acción ejecutada cuando se presiona el botón "Add". Crea un nuevo
+     * entrenamiento y lo guarda en la base de datos.
+     *
+     * @param evt Evento de acción del botón
+     */
     private void jButtonAddWorkoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddWorkoutActionPerformed
-        // Verifica si el usuario está seleccionado
         if (usuarioSeleccionado == null || usuarioSeleccionado.getId() == 0) {
-            // Si no hay un usuario seleccionado, muestra un mensaje de error
             JOptionPane.showMessageDialog(this, "Please select a valid user", "Error", JOptionPane.ERROR_MESSAGE);
-            return;  // Detener la ejecución si no hay usuario seleccionado
+            return;  
         }
         String comments = jTextComment.getText();
         Date dateWork = (Date) jSpinnerForDate.getValue();
-        // Formatea la fecha en formato adecuado para la base de datos
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String fecha = dateFormat.format(dateWork);
         // Crear un nuevo objeto Workouts
@@ -229,22 +246,20 @@ public class DialogWorkouts extends javax.swing.JDialog {
         nuevoWorkout.setForDate(fecha);
         nuevoWorkout.setUserId(usuarioSeleccionado.getId());
         nuevoWorkout.setComments(comments);
-        // Aquí puedes guardar el nuevo workout en la base de datos o en memoria
         da.getSaveWorkout(nuevoWorkout);
-
-        // Mostrar un mensaje de éxito
         JOptionPane.showMessageDialog(this, "Workout created successfully.");
         dispose();
 
     }//GEN-LAST:event_jButtonAddWorkoutActionPerformed
-
+    /**
+     * Acción ejecutada cuando se presiona el botón "Cancel". Cierra el diálogo
+     * sin guardar cambios.
+     *
+     * @param evt Evento de acción del botón
+     */
     private void jButtonCancelarWorkoutsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarWorkoutsActionPerformed
         dispose();
     }//GEN-LAST:event_jButtonCancelarWorkoutsActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddWorkout;

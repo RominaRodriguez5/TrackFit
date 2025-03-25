@@ -14,8 +14,10 @@
                 <configuration>
                     <compilerArgs>
                         <arg>--enable-preview</arg>
-                    </compilerArgs>
-                </configuration>
+                    </compilerArgs>            
+                <failOnError>false</failOnError>  <!-- Evita que Javadoc falle por advertencias -->
+                <additionalparam>-Xdoclint:none</additionalparam>  <!-- Ignora errores de formato -->
+            </configuration>
             </plugin>
         </plugins>
     </build>

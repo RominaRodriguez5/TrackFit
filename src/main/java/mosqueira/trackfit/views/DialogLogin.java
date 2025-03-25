@@ -1,6 +1,4 @@
-
 package mosqueira.trackfit.views;
-
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
@@ -10,8 +8,9 @@ import mosqueira.trackfit.dataAccess.DataAccess;
 import mosqueira.trackfit.dto.Usuaris;
 
 /**
- *
- * @author Lulas
+ * Clase que representa el cuadro de diálogo de inicio de sesión.
+ * Permite a los usuarios ingresar su correo electrónico y contraseña para autenticarse.
+ * @author Romina Mosqueira
  */
 
 public class DialogLogin extends javax.swing.JDialog {
@@ -21,11 +20,13 @@ public class DialogLogin extends javax.swing.JDialog {
     private Usuaris loggedInUser;
     private JCheckBoxMenuItem darkMode;
     JCheckBox showPasswordCheckBox = new JCheckBox("Show password");
-
-    /**
-     * Creates new form NewJDialog
+  /**
+     * Constructor de la clase DialogLogin.
+     * @param parent Marco principal de la aplicación.
+     * @param modal Indica si el cuadro de diálogo es modal.
+     * @param isDarkMode Estado del modo oscuro.
      */
-     public DialogLogin(java.awt.Frame parent, boolean modal, boolean isDarkMode) {
+      public DialogLogin(java.awt.Frame parent, boolean modal, boolean isDarkMode) {
         super(parent, modal);
         initComponents();
         this.mainFra = (Main) parent;
@@ -34,32 +35,26 @@ public class DialogLogin extends javax.swing.JDialog {
         // Inicializar el checkbox del modo oscuro
         darkMode = new JCheckBoxMenuItem("Modo oscuro");
         darkMode.setState(isDarkMode);
-        darkMode.addActionListener(e -> {
-            boolean darkModeSelected = darkMode.getState();
-            applyDarkMode(darkModeSelected);
-        });
+        darkMode.addActionListener(e -> applyDarkMode(darkMode.getState()));
+        jMenuEdit.add(darkMode);
         
-        jMenuEdit.add(darkMode); // Asegurarse de agregarlo correctamente al menú
-
-        // Inicializar el estado del modo oscuro al abrir el login
+        // Aplicar el estado del modo oscuro al abrir el login
         applyDarkMode(isDarkMode);
         
         // Agregar checkbox para mostrar/ocultar la contraseña
         jPanelLogin.add(showPasswordCheckBox);
         showPasswordCheckBox.setBounds(290, 360, 180, 20);
         showPasswordCheckBox.addActionListener(e -> {
-            if (showPasswordCheckBox.isSelected()) {
-                txtPassword.setEchoChar((char) 0); // Muestra la contraseña
-            } else {
-                txtPassword.setEchoChar('*'); // Oculta la contraseña
-            }
+            txtPassword.setEchoChar(showPasswordCheckBox.isSelected() ? (char) 0 : '*');
         });
 
         // Agregar iconos a los elementos visuales
         addIcons();
     }
 
-    // Añade iconos a los elementos visuales
+    /**
+     * Método que añade iconos a los elementos visuales.
+     */
     private void addIcons() {
         Email.setIcon(ThemeManager.resizeIcon("/images/email_icon.png", 50, 50));
         Password.setIcon(ThemeManager.resizeIcon("/images/password_icon.png", 50, 50));
@@ -67,9 +62,12 @@ public class DialogLogin extends javax.swing.JDialog {
         jMenufile.setIcon(ThemeManager.resizeIcon("/images/file_icon.png", 16, 16));
         jMenuReturn.setIcon(ThemeManager.resizeIcon("/images/return_icon.png", 16, 16));
         jMenuEdit.setIcon(ThemeManager.resizeIcon("/images/edit_icon.png", 16, 16));
-
     }
 
+    /**
+     * Aplica el tema oscuro o claro a la interfaz de usuario.
+     * @param isDarkMode Indica si se debe aplicar el modo oscuro.
+     */
     public void applyDarkMode(boolean isDarkMode) {
         if (isDarkMode) {
             ThemeManager.applyDarkMode(jPanelLogin);
@@ -81,6 +79,10 @@ public class DialogLogin extends javax.swing.JDialog {
         jPanelLogin.repaint();
     }
 
+    /**
+     * Obtiene el usuario que ha iniciado sesión.
+     * @return Objeto Usuaris con la información del usuario.
+     */
     public Usuaris getLoggedInUser() {
         return loggedInUser;
     }
@@ -111,14 +113,10 @@ public class DialogLogin extends javax.swing.JDialog {
         setIconImages(null);
         setMinimumSize(new java.awt.Dimension(700, 600));
         setModal(true);
-        setPreferredSize(new java.awt.Dimension(500, 600));
 
-        jPanelLogin.setBackground(new java.awt.Color(204, 204, 204));
-        jPanelLogin.setForeground(new java.awt.Color(255, 255, 255));
         jPanelLogin.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jPanelLogin.setMinimumSize(new java.awt.Dimension(700, 600));
         jPanelLogin.setPreferredSize(new java.awt.Dimension(700, 600));
-        jPanelLogin.setLayout(null);
 
         botonAcceso.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/login_icon.png"))); // NOI18N
         botonAcceso.setBorder(null);
@@ -130,33 +128,22 @@ public class DialogLogin extends javax.swing.JDialog {
                 botonAccesoActionPerformed(evt);
             }
         });
-        jPanelLogin.add(botonAcceso);
-        botonAcceso.setBounds(300, 430, 100, 90);
-        botonAcceso.getAccessibleContext().setAccessibleParent(botonAcceso);
 
         Password.setFont(new java.awt.Font("SansSerif", 3, 14)); // NOI18N
         Password.setForeground(new java.awt.Color(255, 153, 102));
         Password.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         Password.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/password_icon.png"))); // NOI18N
         Password.setMinimumSize(new java.awt.Dimension(0, 0));
-        jPanelLogin.add(Password);
-        Password.setBounds(190, 300, 80, 60);
 
         txtPassword.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtPassword.setText("string");
-        jPanelLogin.add(txtPassword);
-        txtPassword.setBounds(280, 316, 140, 30);
 
         Email.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         Email.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/email_icon.png"))); // NOI18N
         Email.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jPanelLogin.add(Email);
-        Email.setBounds(190, 230, 80, 60);
 
         txtEmail.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtEmail.setText("a@b.c");
-        jPanelLogin.add(txtEmail);
-        txtEmail.setBounds(280, 246, 140, 40);
 
         jlogo.setBackground(new java.awt.Color(191, 154, 207));
         jlogo.setForeground(new java.awt.Color(204, 204, 255));
@@ -166,8 +153,48 @@ public class DialogLogin extends javax.swing.JDialog {
         jlogo.setRequestFocusEnabled(false);
         jlogo.setVerifyInputWhenFocusTarget(false);
         jlogo.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        jPanelLogin.add(jlogo);
-        jlogo.setBounds(210, -10, 250, 240);
+
+        javax.swing.GroupLayout jPanelLoginLayout = new javax.swing.GroupLayout(jPanelLogin);
+        jPanelLogin.setLayout(jPanelLoginLayout);
+        jPanelLoginLayout.setHorizontalGroup(
+            jPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelLoginLayout.createSequentialGroup()
+                .addGap(210, 210, 210)
+                .addComponent(jlogo, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanelLoginLayout.createSequentialGroup()
+                .addGap(190, 190, 190)
+                .addComponent(Email, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanelLoginLayout.createSequentialGroup()
+                .addGap(190, 190, 190)
+                .addComponent(Password, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanelLoginLayout.createSequentialGroup()
+                .addGap(300, 300, 300)
+                .addComponent(botonAcceso, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanelLoginLayout.setVerticalGroup(
+            jPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelLoginLayout.createSequentialGroup()
+                .addComponent(jlogo, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Email, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanelLoginLayout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(10, 10, 10)
+                .addGroup(jPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Password, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanelLoginLayout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(70, 70, 70)
+                .addComponent(botonAcceso, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        botonAcceso.getAccessibleContext().setAccessibleParent(botonAcceso);
 
         jMenuBarLogin.setBackground(new java.awt.Color(102, 102, 102));
         jMenuBarLogin.setBorder(null);
@@ -221,8 +248,12 @@ public class DialogLogin extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * Maneja la acción de presionar el botón de acceso.
+     * @param evt Evento de acción.
+     */
     private void botonAccesoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAccesoActionPerformed
+      
         String email = txtEmail.getText();
         Usuaris usuario = da.getUser(email);
         // Restablecer los bordes de los campos
@@ -251,19 +282,22 @@ public class DialogLogin extends javax.swing.JDialog {
         }
     
     }//GEN-LAST:event_botonAccesoActionPerformed
-
+    /**
+     * Acción del menú de archivo.
+     * @param evt Evento de acción.
+     */
 
     private void jMenufileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenufileActionPerformed
         jMenuEdit.add(darkMode);
     }//GEN-LAST:event_jMenufileActionPerformed
-
+      /**
+     * Acción del menú para regresar.
+     * @param evt Evento de acción.
+     */
     private void jMenuReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuReturnActionPerformed
         setVisible(false);
     }//GEN-LAST:event_jMenuReturnActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Email;
     private javax.swing.JLabel Password;

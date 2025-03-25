@@ -10,15 +10,29 @@ import javax.swing.JList;
 import javax.swing.JTable;
 import javax.swing.table.*;
 
-
 /**
- * Clase para gestionar temas claro y oscuro de la aplicación
+ * Clase para gestionar temas claro y oscuro de la aplicación.
+ * Esta clase proporciona métodos para aplicar estilos de modo claro y oscuro 
+ * a componentes gráficos, como paneles, tablas y listas.
+ * @author Romina Mosqueira
  */
 public class ThemeManager {
+    /**
+     * Constructor vacío de la clase ThemeManager().
+     * Este constructor crea una nueva instancia de la clase ThemeManager() sin parámetros.
+     */
+    public ThemeManager() {
+        
+    }
 
-    // Aplicar modo oscuro a múltiples componentes
+    /**
+     * Aplica el modo oscuro a una lista de componentes.
+     * Establece un fondo oscuro y texto blanco para los componentes proporcionados.
+     * 
+     * @param components los componentes a los que se les aplicará el modo oscuro.
+     */
     public static void applyDarkModeToComponents(JComponent... components) {
-        Color darkBackground = Color.LIGHT_GRAY;
+        Color darkBackground = Color.DARK_GRAY;
         Color lightText = Color.WHITE;
 
         for (JComponent component : components) {
@@ -27,7 +41,12 @@ public class ThemeManager {
         }
     }
 
-    // Aplicar modo claro a múltiples componentes
+    /**
+     * Aplica el modo claro a una lista de componentes.
+     * Establece un fondo claro y texto oscuro para los componentes proporcionados.
+     * 
+     * @param components los componentes a los que se les aplicará el modo claro.
+     */
     public static void applyLightModeToComponents(JComponent... components) {
         Color lightBackground = new Color(204, 204, 204);  // Fondo claro
         Color darkText = Color.BLACK;
@@ -38,14 +57,26 @@ public class ThemeManager {
         }
     }
 
-    // Métodos para aplicar modo oscuro a paneles
+    /**
+     * Aplica el modo oscuro a una lista de paneles.
+     * Establece un fondo oscuro para los paneles proporcionados.
+     * 
+     * @param panels los paneles a los que se les aplicará el modo oscuro.
+     */
     public static void applyDarkMode(JPanel... panels) {
         for (JPanel panel : panels) {
-            panel.setBackground(Color.DARK_GRAY);
+            if (panel != null) {
+                panel.setBackground(Color.DARK_GRAY);
+            }
         }
     }
 
-    // Métodos para aplicar modo claro a paneles
+    /**
+     * Aplica el modo claro a una lista de paneles.
+     * Establece un fondo claro y texto gris para los paneles proporcionados.
+     * 
+     * @param panels los paneles a los que se les aplicará el modo claro.
+     */
     public static void applyLightMode(JPanel... panels) {
         Color lightBackground = new Color(204, 204, 204);
         for (JPanel panel : panels) {
@@ -54,7 +85,14 @@ public class ThemeManager {
         }
     }
 
-    // Método para redimensionar iconos
+    /**
+     * Redimensiona un icono a las dimensiones especificadas.
+     * 
+     * @param path la ruta del icono que se desea redimensionar.
+     * @param width el ancho deseado para el icono.
+     * @param height la altura deseada para el icono.
+     * @return el icono redimensionado.
+     */
     public static ImageIcon resizeIcon(String path, int width, int height) {
         ImageIcon icon = new ImageIcon(ThemeManager.class.getResource(path));
         Image image = icon.getImage();
@@ -62,7 +100,13 @@ public class ThemeManager {
         return new ImageIcon(newImage);
     }
 
-    // Aplicar modo oscuro a tablas y listas con mejores colores
+    /**
+     * Aplica el modo oscuro a tablas y listas, con colores mejorados.
+     * Modifica el fondo, los colores de texto, las filas y las selecciones de las tablas y listas.
+     * 
+     * @param tables las tablas a las que se les aplicará el modo oscuro.
+     * @param lists las listas a las que se les aplicará el modo oscuro.
+     */
     public static void applyDarkModeToTablesAndLists(JTable[] tables, JList<?>[] lists) {
         Color tableBackground = new Color(245, 245, 245); // Gris claro
         Color rowColor = new Color(224, 224, 224); // Filas alternas más claras
@@ -72,7 +116,7 @@ public class ThemeManager {
         for (JTable table : tables) {
             table.setBackground(tableBackground);
             table.setForeground(textColor);
-            table.setGridColor(Color.GRAY);
+            table.setGridColor(Color.DARK_GRAY);
             table.setSelectionBackground(new Color(100, 100, 100));
             table.setSelectionForeground(Color.WHITE);
             table.setRowHeight(30);
@@ -109,7 +153,7 @@ public class ThemeManager {
             list.setBackground(tableBackground);
             list.setForeground(textColor);
             list.setSelectionBackground(new Color(100, 100, 100));
-            list.setSelectionForeground(Color.WHITE);
+            list.setSelectionForeground(Color.LIGHT_GRAY);
             list.setFont(new Font("Arial", Font.PLAIN, 18));
 
             HoverListCellRenderer renderer = new HoverListCellRenderer(tableBackground, hoverColor, textColor);
@@ -134,7 +178,8 @@ public class ThemeManager {
     }
 
     /**
-     * Renderizador de celdas de JTable con efecto hover y colores mejorados
+     * Renderizador de celdas de JTable con efecto hover y colores mejorados.
+     * Este renderizador permite que las celdas de la tabla cambien de color al pasar el mouse por encima.
      */
     static class HoverTableCellRenderer extends DefaultTableCellRenderer {
 
@@ -171,7 +216,8 @@ public class ThemeManager {
     }
 
     /**
-     * Renderizador de celdas de JList con efecto hover y colores mejorados
+     * Renderizador de celdas de JList con efecto hover y colores mejorados.
+     * Este renderizador permite que las celdas de la lista cambien de color al pasar el mouse por encima.
      */
     static class HoverListCellRenderer extends DefaultListCellRenderer {
 

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package mosqueira.trackfit.views;
 import java.awt.Font;
 import java.awt.Frame;
@@ -9,45 +5,45 @@ import javax.swing.JOptionPane;
 import mosqueira.trackfit.dataAccess.DataAccess;
 
 /**
+ * DialogExercise es un JDialog que permite la creación de nuevos ejercicios.
+ * Proporciona una interfaz gráfica para que los usuarios ingresen el nombre y la descripción de un ejercicio.
+ * Incluye validaciones básicas para evitar campos vacíos y confirma la acción del usuario antes de cerrar.
  *
- * @author Lulas
+ * @author Romina Mosqueira
  */
 public class DialogExercise extends javax.swing.JDialog {
-   
+    /**
+    * Instancia de la clase DataAccess para la interacción con la base de datos.
+    */
     private DataAccess da = new DataAccess();
-
+    /**
+     * Constructor de la clase DialogExercise.
+     * 
+     * @param parent La ventana padre del diálogo.
+     * @param modal Define si el diálogo es modal o no.
+     */
     public DialogExercise(Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(parent);
-        applyStyles(); 
+        applyStyles();
     }
- private void applyStyles() {
-    // Establecemos un esquema de colores consistentes para los componentes
-    jDesktopVisualExercicis.setBackground(new java.awt.Color(240, 240, 240));  // Fondo de la ventana
-
-    // Estilo para las etiquetas
-    jNombreExercicis.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));  // Etiqueta en negrita
-    jNombreExercicis.setForeground(new java.awt.Color(0, 51, 102));  // Color para las etiquetas
-
-    jDescripcioExercicis.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));  // Etiqueta en negrita
-    jDescripcioExercicis.setForeground(new java.awt.Color(0, 51, 102));  // Color para las etiquetas
-
-    // Estilo para los campos de texto
-    jTextNombreExercici.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
-    jTextNombreExercici.setBackground(new java.awt.Color(255, 255, 255));  // Fondo blanco para el campo de texto
-
-    jTextDescripcio.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
-    jTextDescripcio.setBackground(new java.awt.Color(255, 255, 255));  // Fondo blanco para el campo de texto
-
-    // Estilo para los botones
-    jButtonGuardarExercicis.setBackground(new java.awt.Color(0, 153, 76));  // Verde para el botón de guardar
-    jButtonGuardarExercicis.setForeground(new java.awt.Color(255, 255, 255));  // Texto en blanco
-
-    jButtonCancelExercici.setBackground(new java.awt.Color(255, 51, 51));  // Rojo para el botón de cancelar
-    jButtonCancelExercici.setForeground(new java.awt.Color(255, 255, 255));  // Texto en blanco
-}  
-    
+     /**
+     * Aplica estilos personalizados a los componentes de la interfaz.
+     */
+       private void applyStyles() {
+        jDesktopVisualExercicis.setBackground(new java.awt.Color(240, 240, 240));
+        jNombreExercicis.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
+        jNombreExercicis.setForeground(new java.awt.Color(0, 51, 102));
+        jDescripcioExercicis.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
+        jDescripcioExercicis.setForeground(new java.awt.Color(0, 51, 102));
+        jTextNombreExercici.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
+        jTextDescripcio.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
+        jButtonGuardarExercicis.setBackground(new java.awt.Color(0, 153, 76));
+        jButtonGuardarExercicis.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonCancelExercici.setBackground(new java.awt.Color(255, 51, 51));
+        jButtonCancelExercici.setForeground(new java.awt.Color(255, 255, 255));
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -149,29 +145,39 @@ public class DialogExercise extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * Método llamado cuando el usuario presiona el botón "Add".
+     * Valida los campos antes de guardar el ejercicio en la base de datos.
+     * 
+     * @param evt Evento de acción generado por el botón.
+     */
     private void jButtonGuardarExercicisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarExercicisActionPerformed
-   String nombreExercici = jTextNombreExercici.getText();
-   String descripcioExercici = jTextDescripcio.getText();
-    if (nombreExercici.isEmpty() || descripcioExercici.isEmpty()) {
-        JOptionPane.showMessageDialog(jDesktopVisualExercicis, "Please fill in all fields.", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    // Guardar el ejercicio en la base de datos
-    da.getSaveExercici(nombreExercici, descripcioExercici);
-    // Mostrar mensaje de éxito
-    JOptionPane.showMessageDialog(this, "Exercise added successfully.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-    // Cerrar el diálogo
-    dispose();
-    }//GEN-LAST:event_jButtonGuardarExercicisActionPerformed
-
-    private void jButtonCancelExerciciActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelExerciciActionPerformed
+        String nombreExercici = jTextNombreExercici.getText().trim();
+        String descripcioExercici = jTextDescripcio.getText().trim();
+        if (nombreExercici.isEmpty() || descripcioExercici.isEmpty()) {
+            JOptionPane.showMessageDialog(jDesktopVisualExercicis, "Please fill in all fields.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        // Guardar el ejercicio en la base de datos
+        da.getSaveExercici(nombreExercici, descripcioExercici);
+        // Mostrar mensaje de éxito
+        JOptionPane.showMessageDialog(this, "Exercise added successfully.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        // Cerrar el diálogo
         dispose();
+    }//GEN-LAST:event_jButtonGuardarExercicisActionPerformed
+    /**
+     * Método llamado cuando el usuario presiona el botón "Cancel".
+     * Muestra una confirmación antes de cerrar el diálogo.
+     * 
+     * @param evt Evento de acción generado por el botón.
+     */
+    private void jButtonCancelExerciciActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelExerciciActionPerformed
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to cancel?", "Confirm", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            dispose();
+        }
     }//GEN-LAST:event_jButtonCancelExerciciActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancelExercici;

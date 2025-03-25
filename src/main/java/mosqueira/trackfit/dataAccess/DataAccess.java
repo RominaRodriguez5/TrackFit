@@ -1,5 +1,4 @@
 package mosqueira.trackfit.dataAccess;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,27 +16,40 @@ import mosqueira.trackfit.dto.Workouts;
 import mosqueira.trackfit.dto.ExercicisWorKouts;
 
 /**
+ * Clase que maneja el acceso a datos para la aplicación TrackFit. Contiene
+ * métodos para interactuar con la base de datos, incluyendo la obtención,
+ * actualización, inserción y eliminación de datos relacionados con usuarios,
+ * ejercicios y entrenamientos.
  *
  * @author Lulas
  */
 public class DataAccess {
-
+    
+    /**
+     * Establece una conexión con la base de datos.
+     *
+     * @return la conexión a la base de datos.
+     */
     public static Connection getConnection() {
         Connection connection = null;
         Properties properties = new Properties();
 
         try {
             properties.load(DataAccess.class.getClassLoader().getResourceAsStream("properties/application.properties"));
-            //String connectionString = "jdbc:sqlserver://localhost:1433;database=simulapdb;user=sa;" + "password=Pwd1234;encrypt=false;trustServerCertificate=true;";
             String connectionUrl = properties.getProperty("connectionUrl");
             connection = DriverManager.getConnection(connectionUrl);
         } catch (Exception e) {
-            // Logger.getLogger(DataAccess.class.getName()).log(Level.SEVERE, null, e);
             e.printStackTrace();
         }
         return connection;
     }
 
+    /**
+     * Obtiene todos los usuarios que no son instructores.
+     *
+     * @return una lista de objetos {@link Usuaris} representando a los
+     * usuarios.
+     */
     public ArrayList<Usuaris> getAllUsers() {
         ArrayList<Usuaris> usuaris = new ArrayList<>();
         String sql = "SELECT * FROM Usuaris WHERE Instructor=0";
@@ -59,9 +71,10 @@ public class DataAccess {
     }
 
     /**
+     * Obtiene un usuario específico por su correo electrónico.
      *
-     * @param email
-     * @return
+     * @param email el correo electrónico del usuario a obtener.
+     * @return el objeto {@link Usuaris} que representa al usuario.
      */
     public static Usuaris getUser(String email) {
         Usuaris user = null;
@@ -83,6 +96,12 @@ public class DataAccess {
         return user;
     }
 
+    /**
+     * Obtiene una lista de usuarios asignados a un instructor específico.
+     *
+     * @param instructor el instructor cuyo usuarios serán obtenidos.
+     * @return una lista de objetos {@link Usuaris} asignados al instructor.
+     */
     public List<Usuaris> getAllUsersInstructor(Usuaris instructor) {
         ArrayList<Usuaris> usuaris = new ArrayList<>();
         // Si el instructor es null, retornamos una lista vacía.
@@ -119,6 +138,13 @@ public class DataAccess {
         return usuaris;  // Retornamos la lista de usuarios.
     }
 
+    /**
+     * Obtiene los entrenamientos de un usuario específico.
+     *
+     * @param userId el identificador del usuario.
+     * @return una lista de objetos {@link Workouts} correspondientes a los
+     * entrenamientos del usuario.
+     */
     public ArrayList<Workouts> getWorkoutsForUser(int userId) {
         ArrayList<Workouts> workout = new ArrayList<>();
         String sql = "SELECT Id, UserId, ForDate, Comments FROM Workouts WHERE UserId = ?";
@@ -141,6 +167,12 @@ public class DataAccess {
         return workout;
     }
 
+    /**
+     * Obtiene todos los entrenamientos registrados.
+     *
+     * @return una lista de objetos {@link Workouts} con todos los
+     * entrenamientos disponibles.
+     */
     public List<Workouts> getWorkoutsList() {
         List<Workouts> workouts = new ArrayList<>();
         String sql = "SELECT * FROM workouts";
@@ -164,6 +196,12 @@ public class DataAccess {
         return workouts;
     }
 
+    /**
+     * Guarda un nuevo entrenamiento en la base de datos.
+     *
+     * @param workout el objeto {@link Workouts} que representa el entrenamiento
+     * a guardar.
+     */
     public void getSaveWorkout(Workouts workout) {
         String sql = "INSERT INTO Workouts (ForDate, UserId, Comments) VALUES (?, ?, ?)";
 
@@ -190,6 +228,12 @@ public class DataAccess {
         }
     }
 
+    /**
+     * Obtiene todos los ejercicios registrados.
+     *
+     * @return una lista de objetos {@link Exercicis} con los detalles de los
+     * ejercicios.
+     */
     public ArrayList<Exercicis> getInfoExercise() {
         ArrayList<Exercicis> infoExercicis = new ArrayList<>();
         String sql = "SELECT * FROM Exercicis";
@@ -213,6 +257,12 @@ public class DataAccess {
         return infoExercicis;
     }
 
+    /**
+     * Guarda un nuevo ejercicio en la base de datos.
+     *
+     * @param nom el nombre del ejercicio.
+     * @param descripcion la descripción del ejercicio.
+     */
     public void getSaveExercici(String nom, String descripcion) {
         String sql = "INSERT INTO Exercicis (NomExercici, Descripcio) VALUES (?, ?)";
         Connection connection = getConnection();
@@ -232,6 +282,13 @@ public class DataAccess {
         }
     }
 
+    /**
+     * Obtiene los ejercicios asociados con un entrenamiento específico.
+     *
+     * @param workoutId el identificador del entrenamiento.
+     * @return una lista de objetos {@link Exercicis} asociados con el
+     * entrenamiento.
+     */
     public ArrayList<Exercicis> getExercicisForWorkout(int workoutId) {
         ArrayList<Exercicis> exercicisList = new ArrayList<>();
         String sql = "SELECT e.Id, e.NomExercici, e.Descripcio "
@@ -261,6 +318,15 @@ public class DataAccess {
         return exercicisList;
     }
 
+    /**
+     * Inserta una nueva relación entre un ejercicio y un entrenamiento en la
+     * tabla `ExercicisWorkouts`. Primero verifica si los IDs proporcionados
+     * existen en las tablas correspondientes. Si alguno de los IDs no existe,
+     * la inserción no se lleva a cabo.
+     *
+     * @param exercicisWorkout el objeto {@link ExercicisWorKouts} que contiene
+     * los IDs del ejercicio y el entrenamiento.
+     */
     public void insertarRelaciones(ExercicisWorKouts exercicisWorkout) {
         //Primero, verificar si los IDs existen en sus respectivas tablas
         if (!existeId("Exercicis", exercicisWorkout.getIdExercici()) || !existeId("Workouts", exercicisWorkout.getIdWorkouts())) {
@@ -279,6 +345,14 @@ public class DataAccess {
         }
     }
 
+    /**
+     * Actualiza el nombre y la descripción de un ejercicio existente en la base
+     * de datos.
+     *
+     * @param id el ID del ejercicio que se quiere actualizar.
+     * @param newName el nuevo nombre del ejercicio.
+     * @param newDescripcio la nueva descripción del ejercicio.
+     */
     public void getUpdateExercici(int id, String newName, String newDescripcio) {
         String sql = "UPDATE Exercicis SET NomExercici = ?, Descripcio = ? WHERE Id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -291,6 +365,15 @@ public class DataAccess {
         }
     }
 
+    /**
+     * Elimina un ejercicio de la base de datos. Primero elimina las relaciones
+     * en la tabla `ExercicisWorkouts` que están asociadas con este ejercicio, y
+     * luego elimina el ejercicio en sí desde la tabla `Exercicis`. Utiliza una
+     * transacción para garantizar que ambas operaciones se realicen de forma
+     * atómica.
+     *
+     * @param idEjercicio el ID del ejercicio que se desea eliminar.
+     */
     public void getDeleteEjercicio(int idEjercicio) {
         // Primero, eliminamos los registros relacionados en ExercicisWorkouts
         String deleteReferencesSql = "DELETE FROM ExercicisWorkouts WHERE IdExercici = ?";
@@ -322,6 +405,14 @@ public class DataAccess {
         }
     }
 
+    /**
+     * Verifica si un ID específico existe en una tabla dada.
+     *
+     * @param tableName el nombre de la tabla en la que se desea verificar la
+     * existencia del ID.
+     * @param id el ID que se desea verificar.
+     * @return true si el ID existe en la tabla, false en caso contrario.
+     */
     private boolean existeId(String tableName, int id) {
         String sql = "SELECT COUNT(*) FROM " + tableName + " WHERE Id = ?";
         try (Connection connection = getConnection(); PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -337,6 +428,13 @@ public class DataAccess {
         return false;
     }
 
+    /**
+     * Registra un nuevo usuario en la base de datos.
+     *
+     * @param u el objeto {@link Usuaris} que contiene los datos del nuevo
+     * usuario.
+     * @return el ID del nuevo usuario insertado en la base de datos.
+     */
     public int registerUser(Usuaris u) {
         int newUserId = 0;
         Connection connection = getConnection();
@@ -357,5 +455,4 @@ public class DataAccess {
         }
         return newUserId;
     }
-
 }

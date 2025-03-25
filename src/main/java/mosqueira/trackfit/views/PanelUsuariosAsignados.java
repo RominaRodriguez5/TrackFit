@@ -1,4 +1,5 @@
 package mosqueira.trackfit.views;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
@@ -11,6 +12,12 @@ import mosqueira.trackfit.dataAccess.DataAccess;
 import mosqueira.trackfit.dto.*;
 import net.miginfocom.swing.MigLayout;
 
+/**
+ * PanelUsuariosAsignados representa un panel dentro de la aplicación TrackFit
+ * donde un instructor puede gestionar los usuarios asignados a él, incluyendo
+ * la visualización y asignación de entrenamientos y ejercicios.
+ * @author Romina Mosqueira
+ */
 public class PanelUsuariosAsignados extends javax.swing.JPanel {
 
     private final Main mainFra;
@@ -20,14 +27,24 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
     private List<Usuaris> listUsers;
     private List<Exercicis> listExercise;
 
+    /**
+     * Constructor de la clase PanelUsuariosAsignados.
+     *
+     * @param jFrameMain Referencia al marco principal de la aplicación.
+     * @param instructor Instructor que gestiona los usuarios asignados.
+     * @param isDarkMode Indica si el modo oscuro está habilitado.
+     */
     public PanelUsuariosAsignados(Main jFrameMain, Usuaris instructor, boolean isDarkMode) {
         this.instructor = instructor;
         this.mainFra = jFrameMain;
         initializeComponents();
         initializeListeners();
-        applyDarkMode(jFrameMain.isDarkModeEnabled()); 
+        applyDarkMode(jFrameMain.isDarkModeEnabled());
     }
 
+    /**
+     * Inicializa todos los componentes de la interfaz gráfica.
+     */
     private void initializeComponents() {
         initComponents();
         PanelPrincipal();
@@ -37,6 +54,9 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         asignarIconosABotones();
     }
 
+    /**
+     * Inicializa los listeners de eventos.
+     */
     private void initializeListeners() {
         componenteCalendar1.addTrainingEventListener((List<TrainingData> trainings) -> {
             if (trainings.isEmpty()) {
@@ -72,20 +92,15 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         });
     }
 
+    /**
+     * Configura y organiza los paneles principales dentro de la interfaz.
+     */
     private void PanelPrincipal() {
-        // Definir el layout principal
         setLayout(new MigLayout("wrap 1, fill", "[grow]", "[grow][grow]"));
-
-        // PANEL SUPERIOR (jSesionInstructor)
         setupSesionInstructorPanel();
-
-        // PANEL INFERIOR
         JPanel panelInferior = createInferiorPanel();
-
-        // Agregar los paneles al `PanelPrincipal`
         add(jSesionInstructor, "growx, pushx, wrap");
         add(panelInferior, "grow, push");
-
         addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -95,17 +110,24 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         });
     }
 
+    /**
+     * Configura el panel de sesión del instructor con la tabla de workouts y
+     * lista de ejercicios.
+     */
     private void setupSesionInstructorPanel() {
         jSesionInstructor.setLayout(new MigLayout("fill", "[grow 50][grow 50]", "[][grow]"));
         jSesionInstructor.add(userComboBox, "span 2, growx, wrap");
-
         Box buttonBox = createButtonBox();
         jSesionInstructor.add(buttonBox, "span 2, wrap");
-
         jSesionInstructor.add(jScrollWorkoutsTable, "grow, push");
         jSesionInstructor.add(jScrollExerciseList, "grow, push");
     }
 
+    /**
+     * Crea un contenedor con botones de acciones principales.
+     *
+     * @return Un objeto Box con botones alineados horizontalmente.
+     */
     private Box createButtonBox() {
         Box buttonBox = Box.createHorizontalBox();
         buttonBox.add(addWorkoutsButton);
@@ -114,6 +136,11 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         return buttonBox;
     }
 
+    /**
+     * Crea un panel inferior que contiene los ejercicios y calendario.
+     *
+     * @return Un JPanel que contiene el calendario y la lista de ejercicios.
+     */
     private JPanel createInferiorPanel() {
         JPanel panelInferior = new JPanel(new MigLayout("fill", "[grow][grow]", "[grow]"));
         panelInferior.add(createEjerciciosPanel(), "grow, push");
@@ -121,6 +148,11 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         return panelInferior;
     }
 
+    /**
+     * Crea el panel de ejercicios con los botones de acción.
+     *
+     * @return Un JPanel que contiene los botones y la tabla de ejercicios.
+     */
     private JPanel createEjerciciosPanel() {
         jPanelExercicis.setLayout(new MigLayout("fill", "[grow]", "[][][grow]"));
         jPanelExercicis.add(createButtonBox2(), "wrap");
@@ -128,6 +160,11 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         return jPanelExercicis;
     }
 
+    /**
+     * Crea un contenedor con botones de acciones principales.
+     *
+     * @return Un objeto Box con botones alineados horizontalmente.
+     */
     private Box createButtonBox2() {
         Box buttonBox2 = Box.createHorizontalBox();
         buttonBox2.add(showExerciseButton);
@@ -140,15 +177,23 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         return buttonBox2;
     }
 
+    /**
+     * Asigna iconos a los botones de la interfaz.
+     */
     private void asignarIconosABotones() {
         addWorkoutsButton.setIcon(ThemeManager.resizeIcon("/images/path_to_icon.png", 60, 60));
         showExerciseButton.setIcon(ThemeManager.resizeIcon("/images/show_exercise_icon.png", 60, 60));
-        addExerciseButton.setIcon(ThemeManager.resizeIcon("/images/add_exercise_icon.png",  60, 60));
-        editExerciseButton.setIcon(ThemeManager.resizeIcon("/images/edit_exercise_icon.png",  60, 60));
-        deleteExerciseButton.setIcon(ThemeManager.resizeIcon("/images/delete_exercise_icon.png",  60, 60));
-        addExerciseToWorkoutButton.setIcon(ThemeManager.resizeIcon("/images/add_exercise_to_workout_icon.png",  60, 60));
+        addExerciseButton.setIcon(ThemeManager.resizeIcon("/images/add_exercise_icon.png", 60, 60));
+        editExerciseButton.setIcon(ThemeManager.resizeIcon("/images/edit_exercise_icon.png", 60, 60));
+        deleteExerciseButton.setIcon(ThemeManager.resizeIcon("/images/delete_exercise_icon.png", 60, 60));
+        addExerciseToWorkoutButton.setIcon(ThemeManager.resizeIcon("/images/add_exercise_to_workout_icon.png", 60, 60));
     }
 
+    /**
+     * Aplica el modo oscuro o claro según la preferencia del usuario.
+     *
+     * @param isDarkMode Indica si el modo oscuro debe activarse.
+     */
     public void applyDarkMode(boolean isDarkMode) {
         if (isDarkMode) {
             applyDarkModeStyles();
@@ -159,26 +204,34 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         repaint();
     }
 
+    /**
+     * Aplica los estilos del modo oscuro a todos los componentes de la
+     * interfaz.
+     */
     private void applyDarkModeStyles() {
         ThemeManager.applyDarkMode(this, jPanelCalendar, jSesionInstructor, jPanelExercicis);
-        ThemeManager.applyDarkModeToTablesAndLists(
-                new JTable[]{workoutsTable, exercisesTable},
-                new JList<?>[]{exerciseList}
-        );
         ThemeManager.applyDarkModeToComponents(addWorkoutsButton, addExerciseToWorkoutButton,
                 addExerciseButton, deleteExerciseButton, editExerciseButton, showExerciseButton,
                 jScrollExerciseList, jScrollWorkoutsTable, jScrollTableExercise, userComboBox);
-    }
 
-    private void applyLightModeStyles() {
-        ThemeManager.applyLightMode(this, jPanelCalendar, jSesionInstructor, jPanelExercicis);
         ThemeManager.applyDarkModeToTablesAndLists(
                 new JTable[]{workoutsTable, exercisesTable},
                 new JList<?>[]{exerciseList}
         );
+    }
+
+    /**
+     * Aplica los estilos del modo claro a todos los componentes de la interfaz.
+     */
+    private void applyLightModeStyles() {
+        ThemeManager.applyLightMode(this, jPanelCalendar, jSesionInstructor, jPanelExercicis);
         ThemeManager.applyLightModeToComponents(addWorkoutsButton, addExerciseToWorkoutButton,
                 addExerciseButton, deleteExerciseButton, editExerciseButton, showExerciseButton,
                 jScrollExerciseList, jScrollWorkoutsTable, jScrollTableExercise, userComboBox);
+        ThemeManager.applyDarkModeToTablesAndLists(
+                new JTable[]{workoutsTable, exercisesTable},
+                new JList<?>[]{exerciseList}
+        );
     }
 
     @SuppressWarnings("unchecked")
@@ -208,7 +261,6 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         setMinimumSize(new java.awt.Dimension(900, 900));
         setPreferredSize(new java.awt.Dimension(1200, 900));
 
-        jSesionInstructor.setBackground(new java.awt.Color(204, 204, 204));
         jSesionInstructor.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Users assigned to the Instructor", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
         jSesionInstructor.setForeground(new java.awt.Color(30, 58, 95));
         jSesionInstructor.setPreferredSize(new java.awt.Dimension(400, 400));
@@ -272,7 +324,7 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
             }
         });
 
-        exerciseList.setBackground(new java.awt.Color(204, 204, 204));
+        exerciseList.setBackground(new java.awt.Color(153, 153, 153));
         exerciseList.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         exerciseList.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         exerciseList.setForeground(new java.awt.Color(30, 58, 95));
@@ -312,7 +364,7 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         );
 
         jPanelExercicis.setBackground(new java.awt.Color(204, 204, 204));
-        jPanelExercicis.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Exercise", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanelExercicis.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Exercise", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 24), new java.awt.Color(30, 58, 95))); // NOI18N
         jPanelExercicis.setForeground(new java.awt.Color(30, 58, 95));
         jPanelExercicis.setPreferredSize(new java.awt.Dimension(500, 355));
 
@@ -429,12 +481,12 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         );
 
         jPanelCalendar.setBackground(new java.awt.Color(204, 204, 204));
-        jPanelCalendar.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Calendar", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanelCalendar.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Calendar", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 24), new java.awt.Color(30, 58, 95))); // NOI18N
         jPanelCalendar.setForeground(new java.awt.Color(30, 58, 95));
         jPanelCalendar.setName(""); // NOI18N
         jPanelCalendar.setPreferredSize(new java.awt.Dimension(600, 350));
 
-        componenteCalendar1.setBackground(new java.awt.Color(204, 204, 204));
+        componenteCalendar1.setBackground(new java.awt.Color(102, 102, 102));
         componenteCalendar1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(30, 58, 95)));
         componenteCalendar1.setForeground(new java.awt.Color(30, 58, 95));
         componenteCalendar1.setActiveButtonColor(new java.awt.Color(102, 204, 255));
@@ -490,18 +542,14 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
      * box. Luego, actualiza la tabla de ejercicios con una lista vacía.
      */
     private void assignedUsers() {
-        List<Usuaris> assignedUsers = da.getAllUsersInstructor(instructor); // Obtiene la lista de usuarios
+        List<Usuaris> assignedUsers = da.getAllUsersInstructor(instructor);
         DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
-
-        listUsers = assignedUsers; // Guarda la lista globalmente
-
-        // Agrega los nombres de los usuarios al combo box
+        listUsers = assignedUsers;
         for (Usuaris user : assignedUsers) {
             comboBoxModel.addElement(user.getNom());
         }
-
-        userComboBox.setModel(comboBoxModel); // Asigna el modelo al combo box
-        updateTableExercicis(new ArrayList<>()); // Limpia la tabla de ejercicios
+        userComboBox.setModel(comboBoxModel);
+        updateTableExercicis(new ArrayList<>());
     }
 
     /**
@@ -513,12 +561,11 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
     private void userComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userComboBoxActionPerformed
         String selectedUserName = (String) userComboBox.getSelectedItem();
         if (selectedUserName != null && !selectedUserName.isEmpty()) {
-            // Busca el objeto Usuaris correspondiente al nombre seleccionado
             for (Usuaris usuario : listUsers) {
                 if (usuario.getNom().equals(selectedUserName)) {
-                    usuarioSeleccionado = usuario; // Actualiza el usuario seleccionado
+                    usuarioSeleccionado = usuario;
                     int userId = usuario.getId();
-                    updateTableWorkouts(userId); // Actualiza la tabla de workouts
+                    updateTableWorkouts(userId);
                 }
             }
         }
@@ -532,13 +579,10 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         int selectedRow = workoutsTable.getSelectedRow();
         if (selectedRow != -1) {
             try {
-                // Obtener el valor de la columna de ID y convertir a Integer
                 Object idValue = workoutsTable.getValueAt(selectedRow, 0);
                 int workoutId = (idValue instanceof Integer) ? (Integer) idValue : Integer.parseInt(idValue.toString());
-
                 List<Exercicis> exercicis = da.getExercicisForWorkout(workoutId);
                 listExercicisAssignedWorkouts(exercicis);
-                // Ocultar la lista si no hay ejercicios
                 exerciseList.setVisible(!exercicis.isEmpty());
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Error: The workout select is not a valid.");
@@ -550,7 +594,6 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
      * Muestra los ejercicios asignados a un workout en una lista.
      */
     private void addWorkoutsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addWorkoutsButtonActionPerformed
-        // Crear una instancia del diálogo con el usuario seleccionado
         DialogWorkouts workouts = new DialogWorkouts(mainFra, true);
         workouts.setVisible(true);
     }//GEN-LAST:event_addWorkoutsButtonActionPerformed
@@ -579,6 +622,12 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         exerciseList.setVisible(false);
     }
 
+    /**
+     * Actualiza la tabla de entrenamientos con los datos del usuario
+     * seleccionado.
+     *
+     * @param userId El ID del usuario cuyos entrenamientos se desean mostrar.
+     */
     private void updateTableWorkouts(int userId) {
         DefaultTableModel dtm = (DefaultTableModel) workoutsTable.getModel();
         dtm.setRowCount(0);
@@ -591,6 +640,10 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Inicializa la tabla de ejercicios con los datos obtenidos desde la base
+     * de datos.
+     */
     private void inicializarTablaListaExercicis() {
         // Inicializa la tabla de ejercicios con los datos desde la base de datos
         List<Exercicis> listaEjercicios = da.getInfoExercise();
@@ -599,6 +652,12 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Actualiza la tabla de ejercicios con una lista de ejercicios
+     * proporcionada.
+     *
+     * @param exercici Lista de ejercicios a mostrar en la tabla.
+     */
     public void updateTableExercicis(List<Exercicis> exercici) {
         listExercise = exercici;
         DefaultTableModel model = new DefaultTableModel();
@@ -611,12 +670,27 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         exercisesTable.getColumnModel().getColumn(0).setMaxWidth(0);
     }
 
+    /**
+     * Evento que se ejecuta cuando se hace clic en el botón para mostrar los
+     * ejercicios. Obtiene una lista de todos los ejercicios desde la base de
+     * datos y actualiza la tabla de ejercicios.
+     *
+     * @param evt El evento de acción que se genera al hacer clic en el botón.
+     */
     private void showExerciseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showExerciseButtonActionPerformed
         List<Exercicis> exercicisList = da.getInfoExercise();
         // Actualizar la tabla con los ejercicios obtenidos
         updateTableExercicis(exercicisList);
     }//GEN-LAST:event_showExerciseButtonActionPerformed
 
+    /**
+     * Evento que se ejecuta cuando se hace clic en el botón para agregar un
+     * ejercicio. Verifica si hay un usuario válido seleccionado, de lo
+     * contrario, muestra un mensaje de error. Luego, abre el cuadro de diálogo
+     * para agregar un nuevo ejercicio.
+     *
+     * @param evt El evento de acción que se genera al hacer clic en el botón.
+     */
     private void addExerciseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addExerciseButtonActionPerformed
         if (usuarioSeleccionado == null || usuarioSeleccionado.getId() == 0) {
             JOptionPane.showMessageDialog(this, "Please select a valid user or workout first.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -625,7 +699,15 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         DialogExercise exercicis = new DialogExercise(mainFra, true);
         exercicis.setVisible(true);
     }//GEN-LAST:event_addExerciseButtonActionPerformed
-
+    /**
+     * Evento que se ejecuta cuando se hace clic en la tabla de ejercicios.
+     * Permite seleccionar un ejercicio de la tabla y habilita el botón de
+     * edición. Además, establece el ID del ejercicio seleccionado en el comando
+     * del botón de edición.
+     *
+     * @param evt El evento de acción que se genera al hacer clic en una fila de
+     * la tabla.
+     */
     private void exercisesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exercisesTableMouseClicked
         // Obtiene la fila seleccionada
         int selectedRow = exercisesTable.getSelectedRow();
@@ -647,7 +729,15 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Please select an exercise to edit.", "Selection Error", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_exercisesTableMouseClicked
-
+    /**
+     * Evento que se ejecuta cuando se hace clic en el botón para editar un
+     * ejercicio. Obtiene el ejercicio seleccionado de la tabla y abre el cuadro
+     * de diálogo para modificarlo. Si no hay un ejercicio seleccionado o hay un
+     * error, se muestra un mensaje de error.
+     *
+     * @param evt El evento de acción que se genera al hacer clic en el botón de
+     * editar.
+     */
     private void editExerciseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editExerciseButtonActionPerformed
         // Verifica si listExercise está inicializada y no es vacía
         if (listExercise == null) {
@@ -674,7 +764,16 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         System.out.println("listExercise is null: " + (listExercise == null));
         System.out.println("listExercise size: " + (listExercise != null ? listExercise.size() : 0));
     }//GEN-LAST:event_editExerciseButtonActionPerformed
-
+    /**
+     * Evento que se ejecuta cuando se hace clic en el botón para eliminar un
+     * ejercicio. Elimina el ejercicio seleccionado de la base de datos y
+     * actualiza la tabla para reflejar los cambios. Si no hay ejercicio
+     * seleccionado o ocurre un error, muestra un mensaje de advertencia o
+     * error.
+     *
+     * @param evt El evento de acción que se genera al hacer clic en el botón de
+     * eliminar.
+     */
     private void deleteExerciseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteExerciseButtonActionPerformed
         int selectedRow = exercisesTable.getSelectedRow();
         if (selectedRow != -1) {
@@ -706,7 +805,14 @@ public class PanelUsuariosAsignados extends javax.swing.JPanel {
         }
 
     }//GEN-LAST:event_deleteExerciseButtonActionPerformed
-
+    /**
+     * Evento que se ejecuta cuando se hace clic en el botón para agregar
+     * ejercicios a un entrenamiento. Permite seleccionar un entrenamiento de la
+     * tabla y agregar los ejercicios seleccionados a ese entrenamiento.
+     *
+     * @param evt El evento de acción que se genera al hacer clic en el botón de
+     * agregar ejercicios.
+     */
     private void addExerciseToWorkoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addExerciseToWorkoutButtonActionPerformed
         // Obtener el w seleccionado
         int selectedRow = workoutsTable.getSelectedRow();

@@ -1,12 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package mosqueira.trackfit.views;
-
 import java.awt.Font;
 import java.awt.Frame;
-
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -14,8 +8,10 @@ import mosqueira.trackfit.dataAccess.DataAccess;
 import mosqueira.trackfit.dto.Exercicis;
 
 /**
- *
- * @author Lulas
+ * DialogModificarExercise es una ventana de diálogo para modificar los datos de un ejercicio.
+ * Permite seleccionar un ejercicio existente, modificar su nombre y descripción, y guardar los cambios.
+ * 
+ * @author Romina Mosqueira
  */
 public class DialogModificarExercise extends javax.swing.JDialog {
 
@@ -23,8 +19,12 @@ public class DialogModificarExercise extends javax.swing.JDialog {
     private List<Exercicis> listExercicis;
     private Exercicis exercici;
 
-    /**
-     * Creates new form DialogModificarExercise
+     /**
+     * Constructor de la clase.
+     * 
+     * @param parent Ventana padre.
+     * @param modal Indica si el diálogo es modal.
+     * @param listExerc Ejercicio a modificar.
      */
     public DialogModificarExercise(Frame parent, boolean modal, Exercicis listExerc) {
         super(parent, modal);
@@ -151,30 +151,28 @@ public class DialogModificarExercise extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * Aplica estilos personalizados a los componentes de la interfaz gráfica.
+     */
     private void applyStyles() {
-        // Establecemos un esquema de colores consistentes para los componentes
-        jDesktopModificar.setBackground(new java.awt.Color(240, 240, 240));  // Fondo de la ventana
-
+        jDesktopModificar.setBackground(new java.awt.Color(240, 240, 240));  
         jNomExerciciModificar.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
-        jNomExerciciModificar.setForeground(new java.awt.Color(0, 51, 102));  // Color para las etiquetas
-
+        jNomExerciciModificar.setForeground(new java.awt.Color(0, 51, 102));  
         jDescripcioExercicisModificar.setFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
-        jDescripcioExercicisModificar.setForeground(new java.awt.Color(0, 51, 102));  // Color para las etiquetas
-
+        jDescripcioExercicisModificar.setForeground(new java.awt.Color(0, 51, 102));  //
         jTextNomExerciciModificar.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
-        jTextNomExerciciModificar.setBackground(new java.awt.Color(255, 255, 255));  // Fondo blanco para el campo de texto
-
+        jTextNomExerciciModificar.setBackground(new java.awt.Color(255, 255, 255));  // 
         jTextDescripcioModificar.setFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
-        jTextDescripcioModificar.setBackground(new java.awt.Color(255, 255, 255));  // Fondo blanco para el campo de texto
-
+        jTextDescripcioModificar.setBackground(new java.awt.Color(255, 255, 255));  
         // Botones con colores personalizados
         jButtonAddModificado.setBackground(new java.awt.Color(0, 153, 76));
         jButtonAddModificado.setForeground(new java.awt.Color(255, 255, 255));
         jButtonCancelModificacion.setBackground(new java.awt.Color(255, 51, 51));
         jButtonCancelModificacion.setForeground(new java.awt.Color(255, 255, 255));
     }
-
+    /**
+     * Carga los ejercicios en el ComboBox.
+     */
     private void loadExercisesIntoComboBox() {
         // Cargar los ejercicios en el comboBox solo una vez
         if (listExercicis != null && !listExercicis.isEmpty()) {
@@ -187,6 +185,11 @@ public class DialogModificarExercise extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "No exercises found.");
         }
     }
+     /**
+     * Acción realizada al presionar el botón "Add" para modificar un ejercicio.
+     * 
+     * @param evt Evento de acción.
+     */
     private void jButtonAddModificadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddModificadoActionPerformed
         try {
             String newName = jTextNomExerciciModificar.getText().trim();
@@ -210,7 +213,11 @@ public class DialogModificarExercise extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButtonAddModificadoActionPerformed
-
+    /**
+     * Acción realizada al presionar el botón "Cancel" para cancelar la modificación.
+     * 
+     * @param evt Evento de acción.
+     */
     private void jButtonCancelModificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelModificacionActionPerformed
         try {
             String newName = jTextNomExerciciModificar.getText().trim();
@@ -232,6 +239,11 @@ public class DialogModificarExercise extends javax.swing.JDialog {
 
     }//GEN-LAST:event_jButtonCancelModificacionActionPerformed
 
+    /**
+     * Acción realizada cuando se selecciona un ejercicio en el ComboBox.
+     * 
+     * @param evt Evento de acción.
+     */
     private void jComboExercicisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboExercicisActionPerformed
         // Cuando el usuario selecciona un ejercicio, actualiza los campos de texto
         int selectItem = jComboExercicis.getSelectedIndex();
@@ -241,10 +253,6 @@ public class DialogModificarExercise extends javax.swing.JDialog {
             jTextDescripcioModificar.setText(exercici.getDescripcio());
         }
     }//GEN-LAST:event_jComboExercicisActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddModificado;

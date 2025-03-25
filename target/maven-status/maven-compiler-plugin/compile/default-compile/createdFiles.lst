@@ -3,7 +3,6 @@ mosqueira\trackfit\views\DialogExercise$1.class
 mosqueira\trackfit\views\DialogLogin$2.class
 mosqueira\trackfit\dto\Usuaris.class
 mosqueira\trackfit\Main$8.class
-mosqueira\trackfit\views\DialogLogin$5.class
 mosqueira\trackfit\views\PanelUsuariosAsignados$8.class
 mosqueira\trackfit\Main$4.class
 mosqueira\trackfit\views\PanelUsuariosAsignados$5.class
@@ -28,18 +27,15 @@ mosqueira\trackfit\views\PanelUsuariosAsignados.class
 mosqueira\trackfit\views\DialogModificarExercise$2.class
 mosqueira\trackfit\Main$6.class
 mosqueira\trackfit\views\PanelUsuariosAsignados$3.class
-mosqueira\trackfit\views\DialogLogin$4.class
 mosqueira\trackfit\Main.class
 mosqueira\trackfit\dto\Workouts.class
 mosqueira\trackfit\views\ThemeManager$HoverTableCellRenderer.class
 mosqueira\trackfit\dto\ExercicisWorKouts.class
-mosqueira\trackfit\Main$9.class
 mosqueira\trackfit\views\DialogWorkouts$2.class
 mosqueira\trackfit\Main$7.class
 mosqueira\trackfit\views\DialogModificarExercise$1.class
 mosqueira\trackfit\views\PanelUsuariosAsignados$4.class
 mosqueira\trackfit\views\PanelUsuariosAsignados$7.class
-mosqueira\trackfit\views\DialogLogin$6.class
 mosqueira\trackfit\Main$3.class
 mosqueira\trackfit\views\DialogWorkouts$1.class
 mosqueira\trackfit\views\PanelUsuariosAsignados$1.class
