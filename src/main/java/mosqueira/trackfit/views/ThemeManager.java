@@ -1,4 +1,5 @@
 package mosqueira.trackfit.views;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -11,25 +12,28 @@ import javax.swing.JTable;
 import javax.swing.table.*;
 
 /**
- * Clase para gestionar temas claro y oscuro de la aplicación.
- * Esta clase proporciona métodos para aplicar estilos de modo claro y oscuro 
- * a componentes gráficos, como paneles, tablas y listas.
+ * Clase para gestionar temas claro y oscuro de la aplicación. Esta clase
+ * proporciona métodos para aplicar estilos de modo claro y oscuro a componentes
+ * gráficos, como paneles, tablas y listas.
+ *
  * @author Romina Mosqueira
  */
 public class ThemeManager {
+
     /**
-     * Constructor vacío de la clase ThemeManager().
-     * Este constructor crea una nueva instancia de la clase ThemeManager() sin parámetros.
+     * Constructor vacío de la clase ThemeManager(). Este constructor crea una
+     * nueva instancia de la clase ThemeManager() sin parámetros.
      */
     public ThemeManager() {
-        
+
     }
 
     /**
-     * Aplica el modo oscuro a una lista de componentes.
-     * Establece un fondo oscuro y texto blanco para los componentes proporcionados.
-     * 
-     * @param components los componentes a los que se les aplicará el modo oscuro.
+     * Aplica el modo oscuro a una lista de componentes. Establece un fondo
+     * oscuro y texto blanco para los componentes proporcionados.
+     *
+     * @param components los componentes a los que se les aplicará el modo
+     * oscuro.
      */
     public static void applyDarkModeToComponents(JComponent... components) {
         Color darkBackground = Color.DARK_GRAY;
@@ -42,10 +46,11 @@ public class ThemeManager {
     }
 
     /**
-     * Aplica el modo claro a una lista de componentes.
-     * Establece un fondo claro y texto oscuro para los componentes proporcionados.
-     * 
-     * @param components los componentes a los que se les aplicará el modo claro.
+     * Aplica el modo claro a una lista de componentes. Establece un fondo claro
+     * y texto oscuro para los componentes proporcionados.
+     *
+     * @param components los componentes a los que se les aplicará el modo
+     * claro.
      */
     public static void applyLightModeToComponents(JComponent... components) {
         Color lightBackground = new Color(204, 204, 204);  // Fondo claro
@@ -58,9 +63,9 @@ public class ThemeManager {
     }
 
     /**
-     * Aplica el modo oscuro a una lista de paneles.
-     * Establece un fondo oscuro para los paneles proporcionados.
-     * 
+     * Aplica el modo oscuro a una lista de paneles. Establece un fondo oscuro
+     * para los paneles proporcionados.
+     *
      * @param panels los paneles a los que se les aplicará el modo oscuro.
      */
     public static void applyDarkMode(JPanel... panels) {
@@ -72,9 +77,9 @@ public class ThemeManager {
     }
 
     /**
-     * Aplica el modo claro a una lista de paneles.
-     * Establece un fondo claro y texto gris para los paneles proporcionados.
-     * 
+     * Aplica el modo claro a una lista de paneles. Establece un fondo claro y
+     * texto gris para los paneles proporcionados.
+     *
      * @param panels los paneles a los que se les aplicará el modo claro.
      */
     public static void applyLightMode(JPanel... panels) {
@@ -87,23 +92,31 @@ public class ThemeManager {
 
     /**
      * Redimensiona un icono a las dimensiones especificadas.
-     * 
+     *
      * @param path la ruta del icono que se desea redimensionar.
      * @param width el ancho deseado para el icono.
      * @param height la altura deseada para el icono.
      * @return el icono redimensionado.
      */
     public static ImageIcon resizeIcon(String path, int width, int height) {
-        ImageIcon icon = new ImageIcon(ThemeManager.class.getResource(path));
+        java.net.URL imgURL = ThemeManager.class.getResource( path);
+
+        if (imgURL == null) {
+            System.err.println("No se pudo cargar la imagen: " + path);
+            return null;
+        }
+
+        ImageIcon icon = new ImageIcon(imgURL);
         Image image = icon.getImage();
         Image newImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(newImage);
     }
 
     /**
-     * Aplica el modo oscuro a tablas y listas, con colores mejorados.
-     * Modifica el fondo, los colores de texto, las filas y las selecciones de las tablas y listas.
-     * 
+     * Aplica el modo oscuro a tablas y listas, con colores mejorados. Modifica
+     * el fondo, los colores de texto, las filas y las selecciones de las tablas
+     * y listas.
+     *
      * @param tables las tablas a las que se les aplicará el modo oscuro.
      * @param lists las listas a las que se les aplicará el modo oscuro.
      */
@@ -179,7 +192,8 @@ public class ThemeManager {
 
     /**
      * Renderizador de celdas de JTable con efecto hover y colores mejorados.
-     * Este renderizador permite que las celdas de la tabla cambien de color al pasar el mouse por encima.
+     * Este renderizador permite que las celdas de la tabla cambien de color al
+     * pasar el mouse por encima.
      */
     static class HoverTableCellRenderer extends DefaultTableCellRenderer {
 
@@ -217,7 +231,8 @@ public class ThemeManager {
 
     /**
      * Renderizador de celdas de JList con efecto hover y colores mejorados.
-     * Este renderizador permite que las celdas de la lista cambien de color al pasar el mouse por encima.
+     * Este renderizador permite que las celdas de la lista cambien de color al
+     * pasar el mouse por encima.
      */
     static class HoverListCellRenderer extends DefaultListCellRenderer {
 
